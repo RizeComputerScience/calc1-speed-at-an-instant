@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speed at an Instant</title>
+<meta name="description" content="Calculus I, Unit 2: how fast something is changing at one exact moment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+
+:root{--bg:#F5F2EA;--surface:#FFFDF7;--ink:#1C1A16;--muted:#5A5549;--line:#DAD3C3;--soft:#ECE7DA;--inside:#1E58A3;--inside-tint:#E1EAF6;--outside:#A1430C;--outside-tint:#F6E5D6;--ok:#2B6838;--ok-tint:#E2F0E3;--k-tint:#EEDFB8;--k-line:#B8964A;--bad:#A3271B;--bad-tint:#F8E2DE;--focus:#1E58A3;--serif:'Newsreader','Iowan Old Style',Georgia,serif;--sans:'Source Sans 3','Segoe UI',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;}
+@media (prefers-color-scheme: dark){:root{--bg:#15140F;--surface:#1E1C18;--ink:#EDE8DC;--muted:#B3AC9D;--line:#3B372F;--soft:#27241E;--inside:#91B9F2;--inside-tint:#1B2840;--outside:#F2A56F;--outside-tint:#3A2617;--ok:#91CC9D;--ok-tint:#1C3020;--k-tint:#3B321C;--k-line:#9C8146;--bad:#F2958A;--bad-tint:#3D1C18;--focus:#91B9F2;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:21px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--inside);text-underline-offset:3px}a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+.page{padding:0 24px 160px}
+.col{max-width:760px;margin-left:auto;margin-right:auto}
+p{margin:0 0 16px;text-wrap:pretty}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em;margin:0}
+.cap{font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.muted{color:var(--muted)}
+/* math typesetting: always inline flow, never flex items */
+.mn,.mv,.mf,.mo,.ms{font-family:var(--serif)}
+.mv{font-style:italic;padding-right:.05em}
+.mo{white-space:nowrap}
+.mo.eq{white-space:normal}
+.ms{font-size:.7em;line-height:1;vertical-align:.65em}
+.ms.msv{font-style:italic}
+.em{font-style:italic}
+.in{color:var(--inside)}
+.mn.in,.mv.in,.mf.in,.mo.in{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;text-decoration-skip-ink:none}
+.pr.in,.pr.out{font-weight:600}
+.out{color:var(--outside)}
+.k{color:var(--ink) !important;background:var(--k-tint);box-shadow:inset 0 -1.5px 0 var(--k-line);border-radius:4px;padding:0 .14em;margin:0 .02em;font-weight:500;text-decoration:none !important}
+sup.k{padding:0 .1em}
+/* bar */
+.bar{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -24px;padding:0 24px}
+.bar-in{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:20px;min-height:60px;position:relative}
+.brand{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);text-decoration:none}
+.toc{display:flex;gap:20px;flex:1;justify-content:center;font-family:var(--sans);font-size:16px}
+.toc a{color:var(--muted);text-decoration:none;padding:6px 0}
+.toc a:hover{color:var(--ink)}
+.rulesbtn{margin-left:auto;font-family:var(--sans);font-size:16px;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;min-height:42px;padding:6px 18px;cursor:pointer;display:flex;gap:8px;align-items:center;position:relative;z-index:22}
+.rulesbtn .n{color:var(--muted);font-weight:500}
+.scrim{position:fixed;inset:0;z-index:21;background:transparent;border:0;padding:0;margin:0;cursor:default}
+.drawer{position:absolute;right:0;top:calc(100% + 8px);z-index:23;width:min(460px,calc(100vw - 32px));max-height:72vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 22px;box-shadow:0 18px 50px rgba(20,18,12,.18)}
+.rules{list-style:none;margin:0;padding:0}
+.rules li{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:12px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
+.rules li:first-child{border-top:0}
+.rname{font-family:var(--sans);font-size:16px;color:var(--muted)}
+.rules li.new .rname{color:var(--ink);font-weight:600}
+.rf{font-size:22px}
+.newtag{grid-column:2;font-family:var(--sans);font-size:14px;color:var(--muted)}
+/* hero */
+.hero{padding:88px 0 24px}
+.kicker{font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.hero h1{font-size:clamp(48px,8vw,84px);line-height:1;font-weight:500;margin-bottom:18px}
+.dek{font-size:24px;line-height:1.5;color:var(--muted)}
+.emblem{margin:52px 0 0;padding:44px 20px 32px;background:var(--surface);border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.emb-row{font-family:var(--serif);font-size:clamp(56px,11vw,108px);line-height:1.1;display:flex;align-items:flex-start}
+.emb-out{color:var(--outside)}
+.emb-in{color:var(--inside);background:var(--inside-tint);border-radius:12px;padding:0 .14em;border-bottom:4px solid var(--inside);animation:breathe 4.5s ease-in-out infinite}
+.emb-sup{font-size:.55em;color:var(--outside);margin-left:.04em}
+.emb-legend{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;font-family:var(--sans);font-size:17px}
+.leg{display:flex;align-items:center;gap:10px}
+.sw{width:30px;height:18px;border-radius:5px;flex:none}
+.sw-in{background:var(--inside-tint);border-bottom:3px solid var(--inside)}
+.sw-out{border:2px solid var(--outside)}
+.leg b{font-weight:600}
+.leg-in b{color:var(--inside)}.leg-out b{color:var(--outside)}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(30,88,163,0)}50%{box-shadow:0 0 0 8px rgba(30,88,163,.10)}}
+/* sections */
+.sec{padding-top:160px;margin-bottom:12px}
+.sec-top{display:flex;align-items:baseline;gap:18px;border-top:2px solid var(--ink);padding-top:18px}
+.sec-n{font-family:var(--serif);font-size:60px;line-height:.9;color:var(--outside);font-weight:400}
+.sec h2{font-size:clamp(34px,5vw,48px);line-height:1.1}
+.lede{margin-top:12px;font-size:21px;color:var(--muted)}
+.prose{margin-top:68px}
+.prose h3{font-size:28px;margin-bottom:12px}
+/* buttons */
+.btn{font-family:var(--sans);font-size:17px;font-weight:600;min-height:48px;padding:10px 20px;border-radius:10px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;white-space:nowrap}
+.btn:hover{opacity:.9}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{min-height:44px;padding:8px 16px;font-size:16px}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.link{font-family:var(--sans);font-size:16px;font-weight:600;background:none;border:0;color:var(--inside);text-decoration:underline;text-underline-offset:3px;min-height:44px;padding:0 4px;cursor:pointer}
+/* cards */
+.prob,.scard,.exam{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:36px 36px 30px;margin:44px auto 0;max-width:760px}
+.prob-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-bottom:18px}
+.plabel{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--muted)}
+.ptask{font-family:var(--sans);font-size:17px;color:var(--muted)}
+.pmath{font-size:29px;line-height:1.35}
+.is-done .plabel::after{content:' \2713';color:var(--ok)}
+.locked{font-family:var(--sans);font-size:16px;color:var(--muted);margin:0}
+.is-locked{background:transparent;border-style:dashed}
+.ansrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.lhs{font-size:24px;white-space:nowrap}
+.minput{flex:1 1 200px;min-width:0;font-family:var(--mono);font-size:19px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;min-height:54px;padding:10px 14px;width:100%}
+.minput:focus{border-color:var(--inside);outline:none;box-shadow:0 0 0 3px var(--inside-tint)}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin-top:10px}
+.key{font-family:var(--serif);font-size:19px;min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;padding:0 4px}
+.key:hover{border-color:var(--ink)}
+.fb{font-family:var(--sans);font-size:17px;line-height:1.55;margin-top:10px}
+.fb .mn,.fb .mv,.fb .mf,.fb .mo{font-size:20px}
+.pv{font-family:var(--sans);font-size:16px;color:var(--muted);margin-top:6px}
+.pv .mn,.pv .mv,.pv .mf,.pv .mo{font-size:19px}
+.fb-ok{color:var(--ok);font-weight:600}
+.fb-no::before,.fb-err::before,.fb-stuck::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--outside);margin-right:9px;vertical-align:2px}
+.fb-err::before{background:var(--muted)}
+.fb-stuck::before{background:var(--inside)}
+.aft{display:flex;gap:10px;flex-wrap:wrap}
+.sol{margin-top:12px;padding:16px 18px;background:var(--soft);border-radius:10px;font-size:20px}
+.repair{margin-top:18px;padding:20px;background:var(--soft);border-radius:12px}
+.repair .diag{font-size:19px}
+.cap2{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--muted);margin:18px 0 6px}
+.repair .pmath{font-size:24px}
+.hintd{margin:0 0 16px;font-family:var(--sans);font-size:17px}
+.hintd summary{font-weight:600;color:var(--inside);cursor:pointer;min-height:40px;display:flex;align-items:center}
+.hintd p{margin:6px 0 4px;font-size:17px}
+.hintd .mn,.hintd .mv,.hintd .mf,.hintd .mo{font-size:20px}
+/* step rows */
+.ctitle{font-family:var(--sans);font-size:19px;margin:0 0 18px}
+.ctitle .mn,.ctitle .mv,.ctitle .mf,.ctitle .mo{font-size:27px}
+.ctitle .ms{font-size:19px}
+.srows{display:flex;flex-direction:column}
+.srow{display:grid;grid-template-columns:28px minmax(0,10em) minmax(0,1fr);gap:8px 18px;align-items:start;padding:20px 0;border-top:1px solid var(--line)}
+.srow.fixrow{grid-template-columns:28px minmax(0,9em) minmax(0,1fr) 120px}
+.snum{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--muted);padding-top:15px}
+.slabel{font-family:var(--sans);font-size:18px;line-height:1.35;padding-top:13px}
+.slabel .mn,.slabel .mv,.slabel .mf,.slabel .mo{font-size:21px}
+.sval{min-width:0}
+.vrow{display:flex;align-items:flex-start;gap:10px}
+.vrow > .sbox,.vrow > .minput{flex:1 1 auto;min-width:0}
+.sbox{display:block;font-size:clamp(18px,2.9vw,24px);white-space:nowrap;overflow-x:auto;line-height:1.45;min-height:54px;padding:8px 16px;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;width:100%;text-align:left;color:var(--ink)}
+.sbox.given{border-style:dashed}
+.sbox.good{border-color:var(--ok);background:var(--ok-tint)}
+.sbox.bad{border-color:var(--bad);background:var(--bad-tint)}
+.sbox.dim{opacity:.55}
+.gtag,.etag{display:inline-block;margin-top:6px;font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.bmark{width:22px;flex:none;color:var(--ok);font-weight:700;font-family:var(--sans);padding-top:14px}
+.srow.ok .minput{border-color:var(--ok)}
+.srow .fb{margin-top:8px}
+.rowacts{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.fixbtn{font-family:var(--sans);font-size:15px;font-weight:600;min-height:44px;width:100%;margin-top:5px;padding:6px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.fixbtn:hover{border-color:var(--ink)}
+.fixbtn:disabled{opacity:.35;cursor:not-allowed}
+.status{display:flex;align-items:flex-start;gap:12px;margin-top:20px;padding:16px 18px;border-radius:12px;font-family:var(--sans);font-size:17px;line-height:1.5}
+.status .mn,.status .mv,.status .mf,.status .mo{font-size:20px}
+.status .dot{flex:none;width:14px;height:14px;border-radius:50%;margin-top:5px}
+.st-bad{background:var(--bad-tint)}.st-bad .dot{background:var(--bad)}
+.st-ok{background:var(--ok-tint)}.st-ok .dot{background:var(--ok)}
+.note{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:20px}
+/* machine */
+.machine{margin:44px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:40px 24px 32px;text-align:center}
+.mbig{font-size:clamp(36px,6vw,50px);line-height:1.3;margin:0 0 28px}
+.chain{display:flex;flex-direction:column;align-items:center;gap:8px;margin:0 auto 40px}
+.cline{white-space:nowrap;font-size:clamp(22px,4.4vw,32px);line-height:1.35;padding:6px 18px;border-radius:10px}
+.cline.last{background:var(--soft);font-weight:500}
+.carr{height:30px;display:flex;align-items:center;justify-content:center}
+.carr svg{display:block}
+.arrp{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cnote{font-family:var(--sans);font-size:15px;color:var(--muted);margin-left:10px}
+.pipe{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
+.pnode{display:flex;flex-direction:column;align-items:center;min-width:64px}
+.pk{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pv2{font-family:var(--serif);font-size:30px;font-variant-numeric:tabular-nums}
+.pin-n .pv2{color:var(--inside)}
+.pku{text-transform:none;font-family:var(--serif);font-style:italic;font-weight:500;font-size:16px;letter-spacing:0}
+.pbox{display:flex;flex-direction:column;align-items:center;padding:10px 16px;border-radius:12px;min-width:104px}
+.pbox .pf{font-size:26px}
+.pin{background:var(--inside-tint);border-bottom:3px solid var(--inside)}
+.pin .pk{color:var(--inside)}
+.pout{border:2px solid var(--outside)}
+.pout .pk{color:var(--outside)}
+.parr{flex:none;width:24px;height:2px;background:var(--muted);position:relative}
+.parr::after{content:'';position:absolute;right:-1px;top:-4px;border-left:8px solid var(--muted);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.pick{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:0 0 26px;font-family:var(--sans);font-size:16px;color:var(--muted)}
+.chip-s{font-family:var(--serif);font-size:19px;min-width:48px;min-height:46px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.chip-s.on{background:var(--k-tint);color:var(--ink);border-color:var(--k-line);box-shadow:inset 0 -2px 0 var(--k-line);font-weight:600}
+.mu{margin:28px 0 0;padding-top:20px;border-top:1px solid var(--line);font-size:21px}
+/* highlighter */
+.hl{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.hl-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));border-bottom:1px solid var(--line)}
+.hl-tab{font-size:19px;min-height:56px;background:transparent;border:0;border-right:1px solid var(--line);color:var(--muted);cursor:pointer;padding:6px 8px;position:relative}
+.hl-tab:last-child{border-right:0}
+.hl-tab.cur{background:var(--bg);color:var(--ink)}
+.hl-tab.cur::after{content:'';position:absolute;left:12px;right:12px;bottom:0;height:3px;background:var(--ink)}
+.hl-tab.done{color:var(--ink)}
+.hl-tab.done::before{content:'\2713';position:absolute;top:3px;right:7px;font-family:var(--sans);font-size:11px;color:var(--ok)}
+.hl-stage{padding:34px 26px 32px;text-align:center}
+.hl-count{font-family:var(--sans);font-size:15px;color:var(--muted)}
+.hl-formula{font-size:clamp(40px,7vw,62px);line-height:1.3;margin:4px 0 18px}
+.hl-formula.solved .in{animation:lift .7s cubic-bezier(.2,.8,.2,1) both;background:var(--inside-tint);border-radius:4px}
+.hl-formula.solved .out{animation:fadein .7s .15s both}
+.hl-ask{font-size:21px}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:460px;margin:0 auto}
+.chip{font-size:26px;min-height:62px;padding:6px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;transition:border-color .15s,transform .15s}
+.chip:hover{border-color:var(--inside);transform:translateY(-1px)}
+.chip.wrong{border-color:var(--outside);border-style:dashed}
+.hl .fb{max-width:500px;margin:18px auto 0;text-align:left}
+.hl-out{max-width:500px;margin:0 auto;text-align:left}
+.hl-line{margin:0 0 8px;font-size:23px}
+.hl-note{font-size:19px;color:var(--muted);margin-top:10px}
+.hl-out .btn{margin-top:14px}
+.hl-done{margin-top:20px;font-size:20px}
+/* rule */
+.rule{margin:44px 0 0;padding:48px 32px 40px;background:var(--surface);border:2px solid var(--ink);border-radius:18px;text-align:center;position:relative}
+.rule-name{font-size:clamp(40px,6.5vw,56px);line-height:1.05;font-weight:500;margin:0 0 6px}
+.memo{display:flex;justify-content:center;margin:14px 0 16px}
+.memo span{position:relative;display:inline-block;font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--outside);background:var(--outside-tint);border:1.5px solid var(--outside);border-radius:999px;padding:5px 16px}
+.memo span::after{content:'';position:absolute;left:50%;bottom:-9px;margin-left:-8px;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid var(--outside)}
+.rule-eq{white-space:nowrap;overflow-x:auto;font-size:clamp(19px,4.4vw,42px);line-height:1.4;padding:22px 12px;background:var(--bg);border-radius:12px}
+.rule-words{margin:26px auto 0;max-width:30em;font-size:22px}
+.rule-u{margin:14px auto 0;max-width:32em;font-family:var(--sans);font-size:17px;color:var(--muted)}
+.rule-u .mn,.rule-u .mv,.rule-u .mf,.rule-u .mo{font-size:20px}
+/* why */
+.whyd{margin:44px auto 0;max-width:760px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:4px 24px}
+.whyd summary,.hintd summary{list-style:none}
+.whyd summary::-webkit-details-marker,.hintd summary::-webkit-details-marker{display:none}
+.whyd summary{font-family:var(--sans);font-size:18px;font-weight:600;cursor:pointer;min-height:58px;display:flex;align-items:center;gap:10px}
+.opt{font-weight:400;color:var(--muted)}
+.chev{margin-left:auto;width:12px;height:12px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:translateY(-3px) rotate(45deg);transition:transform .2s;flex:none}
+details[open] > summary .chev{transform:translateY(3px) rotate(225deg)}
+.hintd summary{gap:10px}
+.hintd summary .chev{margin-left:0;width:9px;height:9px;border-width:2px}
+.whyd ul{margin:4px 0 18px;padding-left:1.2em;font-size:19px}
+.whyd li{margin-bottom:10px}
+/* forms */
+.forms{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px 26px}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.3fr);gap:14px;align-items:baseline;padding:14px 0;border-top:1px solid var(--line);font-size:26px}
+.frow:first-child{border-top:0}
+.fl{text-align:right}
+.feq{color:var(--muted)}
+/* exam */
+.exam-q{font-size:23px}
+.msol{margin:16px 0 0;padding-left:1.3em;font-size:21px}
+.msol li{margin-bottom:10px}
+.self{border:1px solid var(--line);border-radius:12px;padding:12px 18px 8px;margin:20px 0 0}
+.self legend{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--muted);padding:0 6px}
+.ck{display:flex;align-items:center;gap:12px;min-height:46px;font-family:var(--sans);font-size:18px;cursor:pointer}
+.ck input{width:22px;height:22px;accent-color:var(--ink);flex:none}
+/* close */
+.closer h3{font-size:28px;margin:8px 0 14px}
+.closer .rules{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:4px 22px}
+.reads{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:20px}
+.reveal{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes lift{0%{background:transparent}40%{background:var(--inside-tint);box-shadow:0 0 0 6px var(--inside-tint)}100%{background:var(--inside-tint)}}
+@keyframes fadein{from{opacity:.3}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+@media (max-width:860px){.toc{display:none}}
+@media (max-width:900px){.srow,.srow.fixrow{grid-template-columns:24px minmax(0,1fr)}.snum{padding-top:2px}.slabel{padding-top:0}.sval,.fixcol{grid-column:2}.fixbtn{width:auto}}
+@media (max-width:640px){
+body{font-size:19px}
+.page{padding:0 16px 110px}
+.bar{margin:0 -16px;padding:0 16px}
+.hero{padding:52px 0 16px}
+.dek{font-size:20px}
+.prob,.scard,.exam{padding:22px 16px 18px}
+.pmath{font-size:25px}
+.pipe{flex-direction:column;gap:6px}
+.parr{width:2px;height:18px}
+.parr::after{right:-4px;top:auto;bottom:-1px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid var(--muted);border-bottom:0}
+.hl-stage{padding:26px 14px}
+.hl-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hl-tab{border-bottom:1px solid var(--line)}
+.sbox{font-size:23px}
+.frow{font-size:21px;gap:8px}
+.rules li{grid-template-columns:minmax(0,1fr)}
+.newtag{grid-column:1}
+.sec{padding-top:96px}
+.sec-n{font-size:46px}
+.rule{padding:30px 16px 26px}
+}
+
+/* ---------- related rates: additions to the kit's visual language ---------- */
+/* Roles on this page. Blue = a rate (how fast something changes); it is the
+   same blue as the chain rule page's inside, because dx/dt is the inside's
+   derivative when x depends on t. Sand = a value true only at one instant. */
+:root{--rate:var(--inside);--rate-tint:var(--inside-tint)}
+/* stacked fractions: inline-block in ordinary flow, never flex or grid */
+.fr{display:inline-block;vertical-align:middle;text-align:center;line-height:1.08;margin:0 .1em;font-size:.86em}
+.fr > .fn,.fr > .fd{display:block;padding:0 .14em;white-space:nowrap}
+.fr > .fn{border-bottom:1.5px solid currentColor;padding-bottom:.06em}
+.fr > .fd{padding-top:.06em}
+.fr.rate{color:var(--rate);background:var(--rate-tint);border-radius:5px;padding:.08em .06em;box-shadow:inset 0 -2px 0 var(--rate)}
+.fr.op{font-size:.8em}
+.fr .mv{padding-right:0}
+.dd{font-style:normal}
+.rt{color:var(--rate);font-weight:600}
+.k .fr{background:transparent}
+.ml{white-space:nowrap}
+.mline{display:block;white-space:nowrap;padding:3px 0}
+.mline + .mline{border-top:1px dashed var(--line)}
+.marr{display:block;color:var(--muted);font-family:var(--sans);font-size:15px;line-height:1;padding:2px 0 2px 6px}
+/* emblem */
+.emb-math{font-size:clamp(30px,6.4vw,64px);line-height:1.5;white-space:nowrap;text-align:center}
+.emb-sub{font-size:clamp(19px,3.4vw,30px);color:var(--muted);text-align:center;padding:0 8px}
+.sw-rate{background:var(--rate-tint);border-bottom:3px solid var(--rate)}
+.sw-k{background:var(--k-tint);border-bottom:3px solid var(--k-line)}
+.leg-rate b{color:var(--rate)}
+/* choice lists */
+.choices{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.choice{display:block;width:100%;text-align:left;font-family:var(--serif);font-size:20px;line-height:1.45;min-height:56px;padding:12px 18px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.choice:hover{border-color:var(--ink)}
+.choice.picked-ok{border-color:var(--ok);background:var(--ok-tint)}
+.choice.picked-no{border-color:var(--outside);border-style:dashed}
+.choice:disabled{cursor:default}
+.choice .mn,.choice .mv,.choice .mf,.choice .mo{font-size:22px}
+/* simulation */
+.sim{margin:44px auto 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px 30px 26px}
+.sim-fig{display:block;width:100%;max-width:520px;height:auto;margin:0 auto}
+.sim-fig text{font-family:var(--serif);fill:var(--ink)}
+.sim-fig .lab{font-style:italic;font-size:19px}
+.sim-fig .num{font-size:16px;fill:var(--muted)}
+.sim-ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.sim-range{flex:1 1 220px;min-width:0;accent-color:var(--ink);height:44px}
+.sim-rlabel{font-family:var(--sans);font-size:16px;color:var(--muted);width:100%;margin-top:12px}
+.meters{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+.meter-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:var(--sans);font-size:17px}
+.meter-val{font-family:var(--serif);font-size:24px;font-variant-numeric:tabular-nums;color:var(--rate);white-space:nowrap}
+.meter-bar{height:12px;border-radius:6px;background:var(--soft);overflow:hidden;margin-top:6px}
+.meter-fill{height:100%;background:var(--rate);border-radius:6px}
+.sim-note{font-family:var(--sans);font-size:16px;color:var(--muted);margin:16px 0 0}
+/* sorter */
+.sorter-text{font-size:22px;line-height:1.7;margin:4px 0 22px}
+.ph{border-radius:6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.ph.cur{background:var(--soft);box-shadow:inset 0 -2px 0 var(--ink);padding:.05em .15em}
+.ph.done{background:transparent}
+.ph .tag{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-left:.35em;white-space:nowrap}
+.ph.r-know,.ph.r-want{color:var(--rate)}
+.ph.r-inst{background:var(--k-tint);box-shadow:inset 0 -1.5px 0 var(--k-line)}
+.roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.role{font-family:var(--sans);font-size:17px;font-weight:600;min-height:56px;padding:8px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;line-height:1.3}
+.role:hover{border-color:var(--ink)}
+.role.wrong{border-color:var(--outside);border-style:dashed}
+.sort-sum{margin-top:8px;font-size:20px}
+.sort-sum p{margin:0 0 8px}
+/* two kinds of facts */
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:28px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 22px 16px}
+.fact .cap{margin-bottom:12px}
+.fact .mline{font-size:24px}
+.fact p{font-size:18px;color:var(--muted);margin:12px 0 0}
+/* rule list */
+.rule-steps{list-style:none;counter-reset:st;margin:26px auto 0;padding:0;max-width:30em;text-align:left}
+.rule-steps li{counter-increment:st;display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:4px;align-items:baseline;font-size:22px;padding:10px 0;border-top:1px solid var(--line)}
+.rule-steps li:first-child{border-top:0}
+.rule-steps li::before{content:counter(st);font-family:var(--serif);font-size:28px;color:var(--outside)}
+.rule-punch{margin:24px auto 0;font-size:clamp(24px,3.6vw,32px);font-weight:500}
+/* figures in step rows */
+.figbox{display:block;background:var(--bg);border:1.5px dashed var(--line);border-radius:10px;padding:10px}
+.figbox svg{display:block;width:100%;max-width:340px;height:auto;margin:0 auto}
+.figbox svg text{font-family:var(--serif);fill:var(--ink)}
+.sbox.multi{white-space:normal;overflow-x:auto}
+.why{font-family:var(--sans);font-size:15px;color:var(--muted);margin-top:6px}
+.why .mn,.why .mv,.why .mf,.why .mo{font-size:17px}
+.mcrow{display:flex;flex-direction:column;gap:8px}
+.mcrow .choice{min-height:52px;font-size:20px;padding:8px 14px}
+.ptext{font-size:22px;line-height:1.5;margin:0 0 18px}
+.pfig{margin:0 0 18px}
+.pfig svg{display:block;width:100%;max-width:320px;height:auto;margin:0 auto}
+.pfig svg text{font-family:var(--serif);fill:var(--ink)}
+.mstat{margin-top:16px}
+.rowpick{font-family:var(--sans);font-size:15px;font-weight:600;min-height:44px;padding:6px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;margin-top:8px}
+.rowpick:hover{border-color:var(--ink)}
+.rowpick:disabled{opacity:.35;cursor:not-allowed}
+.srow.flag .sbox{border-color:var(--bad);background:var(--bad-tint)}
+.srow.fixed .sbox{border-color:var(--ok);background:var(--ok-tint)}
+.closer .rules .rf.words{font-family:var(--sans);font-size:17px}
+.rules .rf.words{font-family:var(--sans);font-size:17px;line-height:1.45}
+@media (max-width:640px){
+.sim{padding:20px 14px 18px}
+.facts{grid-template-columns:minmax(0,1fr)}
+.roles{grid-template-columns:minmax(0,1fr)}
+.sorter-text{font-size:20px}
+.rule-steps li{font-size:19px}
+.ptext{font-size:20px}
+.choice{font-size:19px}
+.fact .mline{font-size:21px}
+}
+
+.k + sup.ms{margin-left:-.06em}
+.hl-tabs.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:640px){.hl-tabs.four{grid-template-columns:repeat(4,minmax(0,1fr))}.hl-tabs.four .hl-tab{font-size:17px}}
+/* round 2 */
+svg text{font-family:var(--serif);fill:var(--ink)}
+svg .lab{font-style:normal;font-size:19px}
+svg .num{font-size:16px;fill:var(--muted)}
+.marr{font-size:19px;padding:2px 0 2px 10px}
+.facts.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sort-how{font-family:var(--sans);font-size:17px;color:var(--muted);margin:0 0 10px}
+.ph.done.r-fixed{box-shadow:inset 0 -2px 0 var(--muted)}
+.ph.done.r-inst{background:var(--k-tint);box-shadow:inset 0 -1.5px 0 var(--k-line)}
+.sorted{list-style:none;margin:0 0 18px;padding:0;font-family:var(--sans);font-size:16px}
+.sorted li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;padding:6px 0;border-top:1px solid var(--line)}
+.sorted-t{color:var(--ink)}
+.sorted-r{color:var(--muted);font-weight:600}
+.sorted-r.r-know,.sorted-r.r-want{color:var(--rate)}
+.fixbox{margin-top:18px;padding:6px 18px 12px;background:var(--soft);border-radius:12px}
+.sim-ctl{flex-wrap:nowrap}
+.sim-range{width:100%;display:block}
+@media (max-width:860px){.facts.three{grid-template-columns:minmax(0,1fr)}}
+.ml.nb .eq{white-space:nowrap}
+.marr{font-size:22px;padding:2px 0 2px 18px}
+.ml.nb{display:inline-block}
+/* ---------- unit 2 ---------- */
+.in{color:var(--inside)}
+span.in{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;text-decoration-skip-ink:none}
+.fr span.in{text-underline-offset:3px}
+.out{color:var(--outside)}
+.sw-out2{background:var(--outside-tint);border-bottom:3px solid var(--outside)}
+.emb-math{font-size:clamp(26px,5.6vw,52px)}
+.emb-sub{max-width:28em;margin:0 auto}
+.disp{text-align:center;font-size:clamp(28px,5vw,40px);margin:18px 0 8px}
+.strobe{margin:28px auto 0;text-align:center}
+.strobe svg{max-width:360px;margin:0 auto;display:block}
+.strobe figcaption{font-family:var(--sans);font-size:16px;color:var(--muted);max-width:32em;margin:10px auto 0}
+.ctitle{font-family:var(--sans);font-size:17px;font-weight:700;color:var(--muted);margin:0 0 14px}
+.ctitle .mn,.ctitle .mv,.ctitle .mo,.ctitle .pr{font-size:19px;font-weight:400}
+.workbox{font-size:clamp(18px,2.9vw,23px);padding:12px 18px}
+.workbox .mline{padding:6px 0}
+.note.small,.small-sans{font-family:var(--sans);font-size:16px;color:var(--muted)}
+.srow.tr{grid-template-columns:minmax(0,1fr);padding:14px 0}
+.srow.tr .lhs{min-width:9.5em}
+.tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:28px 0 0}
+.avt{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:14px;font-family:var(--sans);font-size:17px}
+.avt caption{caption-side:top;text-align:left;font-weight:700;color:var(--muted);padding:0 0 8px;font-size:15px}
+.avt th,.avt td{padding:10px 14px;border-top:1px solid var(--line);text-align:left}
+.avt thead th{border-top:0;font-size:14px;color:var(--muted);font-weight:600}
+.avt td.nv{font-family:var(--serif);font-size:21px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.avt .ip{display:inline-block;min-width:2ch;text-align:right}
+.avt tr.near td{background:var(--soft);font-weight:600}
+.avt .tbd{font-family:var(--sans);font-size:14px;color:var(--muted)}
+.avt.small{margin:6px 0 4px;width:auto}
+.avt.small td,.avt.small th{text-align:center;font-family:var(--serif);font-size:19px}
+.rule-sub{font-size:20px;margin:18px 0 10px}
+.rule-words{font-size:20px}
+.graphcard{margin:36px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px 18px}
+.zoombtns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.zb{font-family:var(--sans);font-size:16px;font-weight:600;min-height:44px;padding:6px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.zb.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.gwrap svg{display:block;width:100%;height:auto}
+.gread{font-size:21px;margin:12px 0 4px}
+.cardlist{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:24px 26px 12px}
+.cardlist p{font-size:19px}
+@media (max-width:640px){.tables{grid-template-columns:minmax(0,1fr)}.graphcard{padding:16px 12px 12px}.cardlist{padding:18px 16px 8px}}
+
+.mline.cont{border-top:0 !important;padding-top:0;padding-left:1.2em}
+code{font-family:var(--mono);font-size:.92em;background:var(--soft);border-radius:5px;padding:1px 6px;color:var(--ink);font-style:normal}
+.rule .rule-eq{font-size:clamp(28px,6.4vw,44px)}
+.cardlist .rule-eq{font-size:clamp(22px,5vw,32px);white-space:normal}
+@media (max-width:640px){.avt.small td,.avt.small th{padding:8px 6px;font-size:17px}}
+@media (max-width:640px){.srow.tr .minput{flex:1 1 140px}.srow.tr .ansrow{flex-wrap:wrap}.srow.tr .lhs{width:100%}}
+
+.ml.nb{padding:0 .08em}
+.overview{display:flex;align-items:center;gap:14px;margin:4px 0 10px}
+.overview svg{width:150px;height:auto;flex:none}
+.overview .note{margin:0;border:0;padding:0}
+.enl{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--k-line);margin:6px 0 2px}
+svg.enlarged{outline:2.5px solid var(--k-line);outline-offset:-2px;border-radius:4px}
+.partsfig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+.part{cursor:pointer;outline:none}
+.part:focus-visible line,.part:focus-visible polyline{stroke-width:6 !important}
+.part.miss line:last-child{stroke:var(--bad) !important;stroke-dasharray:3 4}
+.mine{font-family:var(--mono);font-size:18px}
+.moreq + .moreq{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+
+</style>
+</head>
+<body>
+<div class="page" id="app"></div>
+<script>
+/*
+ * mathkit.js: the math engine from the chain rule page, usable on its own.
+ *
+ * Works in the browser (window.MathKit) and in Node (require('./mathkit.js')).
+ *
+ *   const mk = new MathKit();
+ *   mk.same(mk.cf('15(3x+1)^4'), mk.cf('5(3x+1)^4*3'))      // true: equivalence by sampling
+ *   mk.parse('sin x^2')                                      // tree, or {err: 'friendly message'}
+ *   mk.pr(mk.simp(mk.diff(mk.parse('ln(x^2+4)').ast)), 'x').s   // '1/(x^2 + 4) * 2x'
+ *   mk.rich('Find `f(x) = «(»{3x + 1}«)^5»` at `x = ‹2›`')  // typeset segments (see math-typesetting.md)
+ *   mk.judge({ ans: '2x', wrongs: [['x^2', 'forgot to differentiate']] }, studentText)
+ *
+ * CLI (validate answer keys while authoring):
+ *   node mathkit.js same "15(3x+1)^4" "5(3x+1)^4*3"
+ *   node mathkit.js diff "sqrt(ln(x^2+5))"
+ *   node mathkit.js parse "e^2x"          # shows how an ambiguous input is read
+ *
+ * Scope: one variable (x, or u when the second argument to parse/compile/cf is true),
+ * + - * / ^, implicit multiplication, sin cos tan sec csc cot ln log sqrt exp abs, e, pi.
+ * Equivalence is numeric: two expressions agree at 10 sample points (relative tolerance
+ * 1e-6, at least 3 points where both are defined). Good for answer checking; not a proof.
+ */
+class MathKit {
+  constructor() { this.fcache = {}; this.rcache = {}; this.D = { VOC: {} }; }
+  /* ---------- math reading: text to tree ---------- */
+  tok(src, uv) {
+    const s = String(src).replace(/[−–—]/g, '-').replace(/[·×∙⋅]/g, '*').replace(/÷/g, '/').replace(/π/g, 'pi').replace(/√/g, 'sqrt').replace(/²/g, '^2').replace(/³/g, '^3').replace(/⁴/g, '^4').replace(/\*\*/g, '^').replace(/[\[{]/g, '(').replace(/[\]}]/g, ')').toLowerCase();
+    const W = ['sqrt', 'sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'exp', 'abs', 'ln', 'log', 'pi'];
+    const vname = uv ? 'u' : 'x';
+    const out = [];
+    let i = 0;
+    while (i < s.length) {
+      const c = s[i];
+      if (c === ' ' || c === '\t') { i++; continue; }
+      if (/[0-9.]/.test(c)) {
+        let j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j++;
+        const t = s.slice(i, j);
+        if (t === '.' || (t.match(/\./g) || []).length > 1) return { err: 'The number “' + t + '” has a stray decimal point.' };
+        out.push({ t: 'num', v: parseFloat(t) });
+        i = j;
+        continue;
+      }
+      if (/[a-z]/.test(c)) {
+        const w = W.find((k) => s.startsWith(k, i));
+        if (w) { i += w.length; if (w === 'pi') out.push({ t: 'pi' }); else out.push({ t: 'fn', v: w === 'log' ? 'ln' : w }); continue; }
+        if (c === vname) { out.push({ t: 'x' }); i++; continue; }
+        if (c === 'e') { out.push({ t: 'e' }); i++; continue; }
+        if (uv && c === 'x') return { err: 'Write this row using u, not x. Here u stands for the whole inside.' };
+        return { err: 'This box uses ' + vname + ' as its only variable, so “' + c + '” is not something it can read.' };
+      }
+      if ('+-*/^()'.indexOf(c) >= 0) { out.push({ t: c }); i++; continue; }
+      return { err: 'The symbol “' + c + '” is not something this box can read.' };
+    }
+    return { toks: out };
+  }
+
+  parse(src, uv) {
+    if (!src || !String(src).trim()) return { empty: true };
+    const r = this.tok(src, uv);
+    if (r.err) return { err: r.err };
+    const T = r.toks;
+    let i = 0;
+    const peek = () => T[i];
+    const isF = (t) => !!t && (t.t === 'num' || t.t === 'x' || t.t === 'e' || t.t === 'pi' || t.t === 'fn' || t.t === '(');
+    const show = (t) => (t.t === 'fn' ? t.v : t.t === 'num' ? String(t.v) : t.t === 'x' ? (uv ? 'u' : 'x') : t.t);
+    const fail = (m) => { throw new Error(m); };
+    const B = (k, a, b) => ({ k, a, b });
+    let expr, term, unary, power, primary;
+    expr = () => {
+      let a = term();
+      while (peek() && (peek().t === '+' || peek().t === '-')) { const op = T[i++].t; a = B(op, a, term()); }
+      return a;
+    };
+    term = () => {
+      let a = unary();
+      for (;;) {
+        const t = peek();
+        if (t && (t.t === '*' || t.t === '/')) { i++; a = B(t.t, a, unary()); }
+        else if (isF(t)) a = B('*', a, power());
+        else break;
+      }
+      return a;
+    };
+    unary = () => {
+      const t = peek();
+      if (t && t.t === '-') { i++; return { k: 'neg', a: unary() }; }
+      if (t && t.t === '+') { i++; return unary(); }
+      return power();
+    };
+    power = () => {
+      const b = primary();
+      if (peek() && peek().t === '^') {
+        i++;
+        let e;
+        if (peek() && peek().t === '-') { i++; e = { k: 'neg', a: power() }; } else e = power();
+        return B('^', b, e);
+      }
+      return b;
+    };
+    primary = () => {
+      const t = T[i];
+      if (!t) fail('The expression ends too soon. Something is missing at the end.');
+      if (t.t === 'num') { i++; return { k: 'n', v: t.v }; }
+      if (t.t === 'x') { i++; return { k: 'v' }; }
+      if (t.t === 'e') { i++; return { k: 'c', name: 'e', v: Math.E }; }
+      if (t.t === 'pi') { i++; return { k: 'c', name: 'pi', v: Math.PI }; }
+      if (t.t === '(') {
+        i++;
+        if (peek() && peek().t === ')') fail('There is an empty pair of parentheses.');
+        const a = expr();
+        if (!peek()) fail('A parenthesis is still open. Close it with “)”.');
+        if (peek().t !== ')') fail('Something is out of place near “' + show(peek()) + '”.');
+        i++;
+        return a;
+      }
+      if (t.t === 'fn') {
+        i++;
+        let fe = null;
+        if (peek() && peek().t === '^') { i++; fe = primary(); }
+        let arg;
+        if (peek() && peek().t === '(') arg = primary();
+        else {
+          if (!peek() || !isF(peek()) || peek().t === 'fn') fail(t.v + ' needs something to act on, such as ' + t.v + '(' + (uv ? 'u' : 'x') + ').');
+          arg = power();
+          while (peek() && isF(peek()) && peek().t !== 'fn' && peek().t !== '(') arg = B('*', arg, power());
+        }
+        const g = { k: 'f', name: t.v, a: arg };
+        return fe ? B('^', g, fe) : g;
+      }
+      if (t.t === ')') fail('There is a “)” without a matching “(”.');
+      fail('Something is out of place near “' + show(t) + '”.');
+    };
+    try {
+      const ast = expr();
+      if (i < T.length) {
+        const t = T[i];
+        if (t.t === ')') fail('There is a “)” without a matching “(”.');
+        fail('Something is out of place near “' + show(t) + '”.');
+      }
+      return { ast };
+    } catch (e) {
+      return { err: e.message };
+    }
+  }
+
+  ev(n, x) {
+    switch (n.k) {
+      case 'n': case 'c': return n.v;
+      case 'v': return x;
+      case '+': return this.ev(n.a, x) + this.ev(n.b, x);
+      case '-': return this.ev(n.a, x) - this.ev(n.b, x);
+      case '*': return this.ev(n.a, x) * this.ev(n.b, x);
+      case '/': return this.ev(n.a, x) / this.ev(n.b, x);
+      case '^': return Math.pow(this.ev(n.a, x), this.ev(n.b, x));
+      case 'neg': return -this.ev(n.a, x);
+      case 'f': {
+        const v = this.ev(n.a, x);
+        const F = { sin: Math.sin, cos: Math.cos, tan: Math.tan, sec: (q) => 1 / Math.cos(q), csc: (q) => 1 / Math.sin(q), cot: (q) => 1 / Math.tan(q), exp: Math.exp, abs: Math.abs, ln: Math.log, sqrt: Math.sqrt };
+        return F[n.name](v);
+      }
+    }
+    return NaN;
+  }
+
+  compile(src, uv) {
+    const p = this.parse(src, uv);
+    if (p.empty) return { empty: true };
+    if (p.err) return { err: p.err };
+    const ast = p.ast;
+    return { f: (x) => this.ev(ast, x), ast };
+  }
+
+  cf(s, uv) {
+    const k = (uv ? 'u:' : 'x:') + s;
+    if (!(k in this.fcache)) { const c = this.compile(s, uv); this.fcache[k] = c.f || null; }
+    return this.fcache[k];
+  }
+
+  same(f, g) {
+    if (!f || !g) return false;
+    const P = [-2.3, -1.45, -0.75, -0.2, 0.35, 0.8, 1.3, 1.9, 2.6, 3.4];
+    let n = 0;
+    for (let k = 0; k < P.length; k++) {
+      const a = g(P[k]);
+      if (!isFinite(a)) continue;
+      const b = f(P[k]);
+      if (!isFinite(b)) return false;
+      if (Math.abs(a - b) > 1e-6 * Math.max(1, Math.abs(a), Math.abs(b))) return false;
+      n++;
+    }
+    return n >= 3;
+  }
+
+  /* ---------- a small symbolic engine for the find-the-mistake card ---------- */
+  N(v) { return { k: 'n', v }; }
+  isN(n, v) { return n.k === 'n' && (v === undefined || Math.abs(n.v - v) < 1e-12); }
+  hasVar(n) { if (n.k === 'v') return true; return !!((n.a && this.hasVar(n.a)) || (n.b && this.hasVar(n.b))); }
+  diff(n) {
+    const d = (m) => this.diff(m);
+    const B = (k, a, b) => ({ k, a, b });
+    const F = (name, a) => ({ k: 'f', name, a });
+    switch (n.k) {
+      case 'n': case 'c': return this.N(0);
+      case 'v': return this.N(1);
+      case '+': case '-': return B(n.k, d(n.a), d(n.b));
+      case 'neg': return { k: 'neg', a: d(n.a) };
+      case '*': return B('+', B('*', d(n.a), n.b), B('*', n.a, d(n.b)));
+      case '/': return B('/', B('-', B('*', d(n.a), n.b), B('*', n.a, d(n.b))), B('^', n.b, this.N(2)));
+      case '^':
+        if (!this.hasVar(n.b)) return B('*', B('*', n.b, B('^', n.a, B('-', n.b, this.N(1)))), d(n.a));
+        if (!this.hasVar(n.a)) return B('*', n.a.k === 'c' && n.a.name === 'e' ? n : B('*', n, F('ln', n.a)), d(n.b));
+        return B('*', n, B('+', B('*', d(n.b), F('ln', n.a)), B('/', B('*', n.b, d(n.a)), n.a)));
+      case 'f': {
+        const a = n.a, da = d(a);
+        const G = {
+          sin: () => F('cos', a), cos: () => ({ k: 'neg', a: F('sin', a) }), tan: () => B('^', F('sec', a), this.N(2)),
+          sec: () => B('*', F('sec', a), F('tan', a)), exp: () => F('exp', a),
+          ln: () => B('/', this.N(1), a), sqrt: () => B('/', this.N(1), B('*', this.N(2), F('sqrt', a)))
+        };
+        if (!G[n.name]) return null;
+        return B('*', G[n.name](), da);
+      }
+    }
+    return null;
+  }
+  hasNull(n) { if (!n) return true; return !!((n.a !== undefined && n.a !== null && this.hasNull(n.a)) || (n.a === null) || (n.b === null) || (n.b && this.hasNull(n.b))); }
+  simp(n) {
+    if (!n) return n;
+    const S = (m) => this.simp(m);
+    const B = (k, a, b) => ({ k, a, b });
+    if (n.k === 'f') return { k: 'f', name: n.name, a: S(n.a) };
+    if (n.k === 'neg') { const a = S(n.a); if (a.k === 'n') return this.N(-a.v); if (a.k === 'neg') return a.a; return { k: 'neg', a }; }
+    if (!n.b) return n;
+    const a = S(n.a), b = S(n.b);
+    switch (n.k) {
+      case '+':
+        if (this.isN(a, 0)) return b; if (this.isN(b, 0)) return a;
+        if (a.k === 'n' && b.k === 'n') return this.N(a.v + b.v);
+        if (b.k === 'neg') return B('-', a, b.a);
+        if (b.k === 'n' && b.v < 0) return B('-', a, this.N(-b.v));
+        return B('+', a, b);
+      case '-':
+        if (this.isN(b, 0)) return a; if (this.isN(a, 0)) return S({ k: 'neg', a: b });
+        if (a.k === 'n' && b.k === 'n') return this.N(a.v - b.v);
+        return B('-', a, b);
+      case '*':
+        if (this.isN(a, 0) || this.isN(b, 0)) return this.N(0);
+        if (this.isN(a, 1)) return b; if (this.isN(b, 1)) return a;
+        if (a.k === 'n' && b.k === 'n') return this.N(a.v * b.v);
+        if (a.k === 'neg') return S({ k: 'neg', a: B('*', a.a, b) });
+        if (b.k === 'neg') return S({ k: 'neg', a: B('*', a, b.a) });
+        if (b.k === 'n' && a.k !== 'n') return S(B('*', b, a));
+        if (a.k === 'n' && b.k === '*' && b.a.k === 'n') return S(B('*', this.N(a.v * b.a.v), b.b));
+        if (a.k === 'n' && a.v < 0) return { k: 'neg', a: S(B('*', this.N(-a.v), b)) };
+        return B('*', a, b);
+      case '/':
+        if (this.isN(b, 1)) return a; if (this.isN(a, 0)) return this.N(0);
+        if (a.k === 'n' && b.k === 'n') return this.N(a.v / b.v);
+        return B('/', a, b);
+      case '^':
+        if (this.isN(b, 1)) return a; if (this.isN(b, 0)) return this.N(1);
+        if (a.k === 'n' && b.k === 'n') return this.N(Math.pow(a.v, b.v));
+        return B('^', a, b);
+    }
+    return B(n.k, a, b);
+  }
+  subst(n, r) {
+    if (n.k === 'v') return r;
+    const o = Object.assign({}, n);
+    if (n.a) o.a = this.subst(n.a, r);
+    if (n.b) o.b = this.subst(n.b, r);
+    return o;
+  }
+  fnum(v) {
+    if (Number.isInteger(v)) return String(v);
+    for (let q = 2; q <= 12; q++) { const p = v * q; if (Math.abs(p - Math.round(p)) < 1e-9) return Math.round(p) + '/' + q; }
+    return String(Math.round(v * 1000) / 1000);
+  }
+  pr(n, vn) {
+    const P = (m) => this.pr(m, vn);
+    const wrap = (r, need) => (r.p < need ? '(' + r.s + ')' : r.s);
+    switch (n.k) {
+      case 'n': return n.v < 0 ? { s: '-' + this.fnum(-n.v), p: 3 } : { s: this.fnum(n.v), p: (Number.isInteger(n.v) ? 5 : 2) };
+      case 'c': return { s: n.name, p: 5 };
+      case 'v': return { s: vn, p: 5 };
+      case 'f': return { s: n.name + '(' + P(n.a).s + ')', p: 5 };
+      case 'neg': return { s: '-' + wrap(P(n.a), 2), p: 3 };
+      case '+': return { s: P(n.a).s + ' + ' + wrap(P(n.b), 2), p: 1 };
+      case '-': return { s: P(n.a).s + ' - ' + wrap(P(n.b), 2), p: 1 };
+      case '*': {
+        const l = P(n.a), r = P(n.b);
+        const implicit = n.a.k === 'n' && n.b.k !== 'n' && r.p >= 2 && !/^[0-9]/.test(r.s);
+        return { s: wrap(l, 2) + (implicit ? '' : ' * ') + wrap(r, 2), p: 2 };
+      }
+      case '/': return { s: wrap(P(n.a), 2) + '/' + wrap(P(n.b), 3), p: 2 };
+      case '^': {
+        if (n.a.k === 'f' && n.b.k === 'n' && Number.isInteger(n.b.v) && n.b.v > 0) return { s: n.a.name + '^' + n.b.v + '(' + P(n.a.a).s + ')', p: 5 };
+        const base = P(n.a), ex = P(n.b);
+        const simpleEx = (n.b.k === 'n' && Number.isInteger(n.b.v) && n.b.v >= 0) || n.b.k === 'v' || n.b.k === 'c';
+        return { s: wrap(base, 5) + '^' + (simpleEx ? ex.s : '(' + ex.s + ')'), p: 4 };
+      }
+    }
+    return { s: '?', p: 5 };
+  }
+
+  judge(it, raw) {
+    let val = String(raw || '');
+    if (val.indexOf('=') >= 0) val = val.slice(val.lastIndexOf('=') + 1);
+    if (!val.trim() || /^\s*(idk|i ?d[o']?n'?t ?know|i dont know|dunno|no idea|not sure|stuck|help|\?+)\s*$/i.test(val)) return { st: 'stuck' };
+    const uv = !!it.u;
+    const c = this.compile(val, uv);
+    if (c.err) return { st: 'err', msg: c.err };
+    const g = this.cf(it.ans, uv);
+    if (this.same(c.f, g)) return { st: 'ok' };
+    const W = it.wrongs || [];
+    for (let k = 0; k < W.length; k++) {
+      const w = this.cf(W[k][0], uv);
+      if (w && this.same(c.f, w)) {
+        const t = W[k][1];
+        return { st: 'slip', tag: this.D.VOC[t] ? t : null, key: t, msg: this.D.VOC[t] || t };
+      }
+    }
+    if (it.f) { const o = this.cf(it.f, uv); if (o && this.same(c.f, o)) return { st: 'no', msg: 'That is the original function, unchanged. Differentiate it.' }; }
+    return { st: 'no', msg: '' };
+  }
+
+  /* ---------- typesetting ---------- */
+  supFlat(g) {
+    const SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
+    let s = String(g).replace(/sqrt/g, '√').replace(/pi/g, 'π').replace(/\*/g, '·');
+    s = s.replace(/\^\(?(-?[0-9]+)\)?/g, (m, d) => d.split('').map((c) => SUP[c] || c).join(''));
+    s = s.replace(/\s*-\s*/g, (m, off) => (off === 0 ? '−' : ' − ')).replace(/\s*\+\s*/g, ' + ');
+    return s;
+  }
+
+  supSegs(g, R, out) {
+    const s = this.supFlat(g);
+    const parts = s.match(/[a-zA-Z]+|[^a-zA-Z]+/g) || [];
+    parts.forEach((p) => out.push({ s: p, cls: 'ms' + (/^[a-zA-Z]$/.test(p) ? ' msv' : '') + R, sup: true, nsup: false }));
+  }
+
+  chunks(s) {
+    const out = [];
+    let cur = '', role = '', sup = false;
+    const flush = () => { if (cur) out.push([cur, role, sup]); cur = ''; };
+    let keep = null;
+    for (const c of s) {
+      if (c === '‹') { flush(); keep = [role, sup]; role = (role ? role + ' ' : '') + 'k'; continue; }
+      if (c === '›') { flush(); if (keep) { role = keep[0]; sup = keep[1]; keep = null; } continue; }
+      if (c === '{' || c === '«') {
+        let ns = false;
+        if (cur.endsWith('^')) { cur = cur.slice(0, -1); ns = true; }
+        flush(); role = c === '{' ? 'in' : 'out'; sup = ns;
+      } else if (c === '}' || c === '»') { flush(); role = ''; sup = false; }
+      else cur += c;
+    }
+    flush();
+    return out;
+  }
+
+  pm(s, role, out, ctx) {
+    const W = ['sqrt', 'sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'exp', 'ln', 'log', 'pi', 'let'];
+    const R = role ? ' ' + role : '';
+    const push = (k, txt, opd) => {
+      if (ctx.sp && ctx.prev === 'opd' && opd) out.push({ s: ' ', cls: 'mn' + R, sup: false, nsup: true });
+      ctx.sp = false;
+      out.push({ s: txt, cls: k + R, sup: false, nsup: true });
+    };
+    let i = 0;
+    while (i < s.length) {
+      const c = s[i];
+      if (c === ' ') { ctx.sp = true; i++; continue; }
+      if (c === '^') {
+        i++;
+        let g = '';
+        if (s[i] === '(') {
+          let d = 0, j = i;
+          for (; j < s.length; j++) { if (s[j] === '(') d++; else if (s[j] === ')') { d--; if (d === 0) break; } }
+          g = s.slice(i + 1, j); i = j + 1;
+        } else {
+          let j = i;
+          if (s[j] === '-' || s[j] === '−') j++;
+          if (/[0-9.]/.test(s[j] || '')) { while (j < s.length && /[0-9.]/.test(s[j])) j++; }
+          else if (/[a-zA-Z]/.test(s[j] || '')) { const w = W.find((k) => s.startsWith(k, j)); j += w ? w.length : 1; }
+          else if (j < s.length) j++;
+          g = s.slice(i, j); i = j;
+        }
+        this.supSegs(g, R, out);
+        ctx.prev = 'opd'; ctx.sp = false;
+        continue;
+      }
+      if (/[0-9.]/.test(c)) {
+        let j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j++;
+        push('mn', s.slice(i, j), true); i = j; ctx.prev = 'opd';
+        continue;
+      }
+      if (/[a-zA-Z]/.test(c)) {
+        const w = W.find((k) => s.startsWith(k, i));
+        if (w) {
+          i += w.length;
+          if (w === 'pi') { push('mn', 'π', true); ctx.prev = 'opd'; }
+          else if (w === 'sqrt') { push('mn', '√', true); ctx.prev = 'op'; }
+          else if (w === 'let') { push('mf', 'let ', true); ctx.prev = 'op'; }
+          else { const nx = s[i]; push('mf', w + ((nx === '(' || nx === '^') ? '' : ' '), true); ctx.prev = 'op'; }
+          continue;
+        }
+        push('mv', c, true); i++; ctx.prev = 'opd';
+        continue;
+      }
+      if (c === '*' || c === '·') { push('mo', ' · ', false); i++; ctx.prev = 'op'; continue; }
+      if (c === '×') { push('mo', ' × ', false); i++; ctx.prev = 'op'; continue; }
+      if (c === '+') { push('mo', ctx.prev === 'opd' ? ' + ' : '+', false); i++; ctx.prev = 'op'; continue; }
+      if (c === '-' || c === '−') { push('mo', ctx.prev === 'opd' ? ' − ' : '−', false); i++; ctx.prev = 'op'; continue; }
+      if (c === '=' || c === '>' || c === '<') { push('mo eq', ' ' + c + ' ', false); i++; ctx.prev = 'op'; continue; }
+      if (c === '(') { push('mn', '(', true); i++; ctx.prev = 'op'; continue; }
+      if (c === ')') { push('mn', ')', false); i++; ctx.prev = 'opd'; continue; }
+      if (c === '/') { push('mn', '/', false); i++; ctx.prev = 'op'; continue; }
+      if (c === '\'' || c === '′') { push('mn', '′', false); i++; ctx.prev = 'opd'; continue; }
+      if (c === '√') { push('mn', '√', true); i++; ctx.prev = 'op'; continue; }
+      push('mn', c, false); i++; ctx.prev = 'opd';
+    }
+  }
+
+  rich(t) {
+    if (!t) return [];
+    if (this.rcache[t]) return this.rcache[t];
+    const out = [];
+    const ctx = { prev: '', sp: false };
+    String(t).split('`').forEach((part, k) => {
+      if (!part) return;
+      const ch = this.chunks(part);
+      if (k % 2 === 0) {
+        ch.forEach((c) => {
+          const R = c[1] ? ' ' + c[1] : '';
+          c[0].split('*').forEach((bit, j) => { if (bit) out.push({ s: bit, cls: (j % 2 ? 'pr em' : 'pr') + R, sup: false, nsup: true }); });
+        });
+        ctx.prev = ''; ctx.sp = false;
+      } else {
+        ch.forEach((c) => {
+          if (c[2]) { this.supSegs(c[0], c[1] ? ' ' + c[1] : '', out); ctx.prev = 'opd'; }
+          else this.pm(c[0], c[1], out, ctx);
+        });
+      }
+    });
+    this.rcache[t] = out;
+    return out;
+  }
+
+  clean(v) { return String(v).replace(/[{}«»`*]/g, (c) => (c === '{' ? '(' : c === '}' ? ')' : c === '*' ? '·' : '')); }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MathKit;
+  if (require.main === module) {
+    const [cmd, a, b] = process.argv.slice(2);
+    const mk = new MathKit();
+    if (cmd === 'same') {
+      const p = mk.compile(a), q = mk.compile(b);
+      if (p.err || q.err) { console.log('parse error:', p.err || q.err); process.exit(1); }
+      console.log(mk.same(p.f, q.f) ? 'equivalent' : 'NOT equivalent');
+    } else if (cmd === 'diff') {
+      const p = mk.parse(a); if (p.err) { console.log(p.err); process.exit(1); }
+      console.log(mk.pr(mk.simp(mk.diff(p.ast)), 'x').s);
+    } else if (cmd === 'parse') {
+      const p = mk.parse(a); console.log(p.err ? p.err : mk.pr(p.ast, 'x').s);
+    } else {
+      console.log('usage: node mathkit.js same A B | diff F | parse F');
+    }
+  }
+} else if (typeof window !== 'undefined') {
+  window.MathKit = MathKit;
+}
+
+</script>
+<script>
+(function () {
+'use strict';
+var KEY = 'rize-unit2-speed-at-an-instant-v1';
+/* lesson-core.js: shared engine for Rize interactive lesson pages (plain HTML build).
+   Extracted from the Unit 8 build, 2026-10-08. The page script defines KEY, VOC, REP and POS
+   before this file runs, then builds its content with M, P, V, L, typed(), mcHTML(), blk(), sec(), prose().
+   Authoring syntax inside backticks:
+     F{a}{b}  stacked fraction        R{y}  rate dy/dt        Dt  operator d/dt
+     {..}     blue role (input change) «..» orange role (output change)  ‹6›  sand mark (value at the instant)
+     ^2 ^(..) superscript             "words"  upright prose inside math */
+var mk = new MathKit();
+var NB = ' ', NN = ' ';
+
+/* ---------------- state ---------------- */
+function defaults() { return { ans: {}, res: {}, tries: {}, pick: {}, wrong: {}, tab: {}, sort: {}, done: {}, open: {}, checks: {}, hint: {} }; }
+var S = defaults();
+try { var raw = localStorage.getItem(KEY); if (raw) { var o = JSON.parse(raw); Object.keys(S).forEach(function (k) { if (o[k] && typeof o[k] === 'object') S[k] = o[k]; }); } } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+var UI = { rules: false };
+
+/* ---------------- math typesetting ---------------- */
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function M(src) { return '<span class="ml">' + mth(String(src)) + '</span>'; }
+function mth(s) {
+  var i = 0, out = '', prev = '', sp = false;
+  function grab(open, close) {
+    var d = 0, j = i;
+    for (; j < s.length; j++) { if (s[j] === open) d++; else if (s[j] === close) { d--; if (d === 0) break; } }
+    var inner = s.slice(i + 1, j); i = j + 1; return inner;
+  }
+  function opd(html) { if (sp && prev === 'opd') out += NN; sp = false; out += html; prev = 'opd'; }
+  function op(html) { sp = false; out += html; prev = 'op'; }
+  while (i < s.length) {
+    var c = s[i];
+    if (c === ' ') { sp = true; i++; continue; }
+    if (c === 'R' && s[i + 1] === '{') { i++; var v = grab('{', '}'); opd('<span class="fr rate"><span class="fn"><span class="mn dd">d</span>' + mth(v) + '</span><span class="fd"><span class="mn dd">d</span><span class="mv">t</span></span></span>'); continue; }
+    if (c === 'F' && s[i + 1] === '{') { i++; var a = grab('{', '}'); var b = s[i] === '{' ? grab('{', '}') : ''; opd('<span class="fr"><span class="fn">' + mth(a) + '</span><span class="fd">' + mth(b) + '</span></span>'); continue; }
+    if (c === 'D' && s[i + 1] === 't') { i += 2; if (sp && prev === 'opd') out += NN; sp = false; out += '<span class="fr op"><span class="fn"><span class="mn dd">d</span></span><span class="fd"><span class="mn dd">d</span><span class="mv">t</span></span></span>'; prev = 'op'; continue; }
+    if (c === '{') { var gi = grab('{', '}'); opd('<span class="in">' + mth(gi) + '</span>'); continue; }
+    if (c === '«') { var go = grab('«', '»'); opd('<span class="out">' + mth(go) + '</span>'); continue; }
+    if (c === '‹') { var k = grab('‹', '›'); opd('<span class="k">' + mth(k) + '</span>'); continue; }
+    if (c === '"') { var j2 = s.indexOf('"', i + 1); var w = s.slice(i + 1, j2); i = j2 + 1; if (sp) out += NB; sp = false; out += '<span class="pr">' + esc(w) + '</span>'; if (s[i] === ' ') { out += NB; i++; } prev = 'op'; continue; }
+    if (c === '^') {
+      i++; var g;
+      if (s[i] === '(') g = grab('(', ')');
+      else if (s[i] === '‹') { g = '‹' + grab('‹', '›') + '›'; }
+      else { var j = i; if (s[j] === '-' || s[j] === '−') j++; if (/[0-9.]/.test(s[j] || '')) { while (j < s.length && /[0-9.]/.test(s[j])) j++; } else j++; g = s.slice(i, j); i = j; }
+      out += '<sup class="ms">' + mth(g) + '</sup>'; prev = 'opd'; sp = false; continue;
+    }
+    if (/[0-9.]/.test(c)) { var j3 = i; while (j3 < s.length && /[0-9.]/.test(s[j3])) j3++; opd('<span class="mn">' + s.slice(i, j3) + '</span>'); i = j3; continue; }
+    if (/[A-Za-z]/.test(c)) {
+      if (s.startsWith('sqrt', i)) { i += 4; opd('<span class="mn">√</span>'); prev = 'op'; continue; }
+      if (s.startsWith('pi', i)) { i += 2; opd('<span class="mn">π</span>'); continue; }
+      var fnw = ['sin', 'cos', 'tan', 'sec', 'ln'].find(function (f) { return s.startsWith(f, i); });
+      if (fnw) { i += fnw.length; opd('<span class="mf">' + fnw + (s[i] === '(' || s[i] === '^' ? '' : NN) + '</span>'); prev = 'op'; continue; }
+      opd('<span class="mv">' + c + '</span>'); i++; continue;
+    }
+    if (c === '+') { op(prev === 'opd' ? '<span class="mo">' + NB + '+' + NB + '</span>' : '<span class="mo">+</span>'); i++; continue; }
+    if (c === '-' || c === '−') { op(prev === 'opd' ? '<span class="mo">' + NB + '−' + NB + '</span>' : '<span class="mo">−</span>'); i++; continue; }
+    if (c === '=' || c === '≈') { op('<span class="mo eq"> ' + c + NB + '</span>'); i++; continue; }
+    if (c === '*' || c === '·') { op('<span class="mo">' + NB + '·' + NB + '</span>'); i++; continue; }
+    if (c === '→') { op('<span class="mo eq"> →' + NB + '</span>'); i++; continue; }
+    if (c === ',') { op('<span class="mn">,</span> '); i++; continue; }
+    if (c === '(') { if (sp && prev === 'opd') out += NN; sp = false; out += '<span class="mn">(</span>'; prev = 'op'; i++; continue; }
+    if (c === ')') { out += '<span class="mn">)</span>'; prev = 'opd'; sp = false; i++; continue; }
+    if (c === "'" || c === '′') { out += '<span class="mn">′</span>'; prev = 'opd'; i++; continue; }
+    if (c === '√') { opd('<span class="mn">√</span>'); prev = 'op'; i++; continue; }
+    if (c === 'π') { opd('<span class="mn">π</span>'); i++; continue; }
+    out += '<span class="mn">' + esc(c) + '</span>'; prev = 'opd'; i++;
+  }
+  return out;
+}
+/* prose with `math` and *emphasis* */
+function P(t, box) {
+  return String(t).split('`').map(function (part, k) {
+    if (k % 2) return box ? M(part) : '<span class="ml nb">' + mth(part) + '</span>';
+    part = part.replace(/(\d) (?=(km|ft|cm|mi|in|feet|foot|miles?|cubic|square|centimeters?|seconds?)\b)/g, '$1' + NB).replace(/(\d)-(foot|ft)\b/g, '$1\u2011$2');
+    return esc(part).replace(/⟦(.+?)⟧/g, function (m, c) { return '<code>' + c.replace(/\*/g, '\u0001') + '</code>'; }).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').split('*').map(function (b, j) { return j % 2 ? '<em>' + b + '</em>' : b; }).join('').replace(/\u0001/g, '*');
+  }).join('');
+}
+/* a vertical stack of math lines; "|" separates lines, arrows between */
+function V(lines) { return lines.map(function (l, n) { return (n ? '<span class="marr" aria-hidden="true">↓</span>' : '') + '<span class="mline">' + P(l, true) + '</span>'; }).join(''); }
+function L(lines) { return lines.map(function (l) { return '<span class="mline' + (/^`\s*=/.test(l) ? ' cont' : '') + '">' + P(l, true) + '</span>'; }).join(''); }
+
+var INK = 'stroke:var(--ink)', MUT = 'stroke:var(--muted)', RATE = 'stroke:var(--rate)';
+function txt(x, y, s, cls, anchor, extra) { return '<text x="' + x + '" y="' + y + '" class="' + (cls || '') + '" text-anchor="' + (anchor || 'middle') + '"' + (extra || '') + '>' + s + '</text>'; }
+function it(s) { return '<tspan font-style="italic">' + s + '</tspan>'; }
+/* ---------------- judging typed answers ---------------- */
+var STUCK = /^\s*(idk|i ?d[o']?n'?t ?know|i dont know|dunno|no idea|not sure|stuck|help|\?+)\s*$/i;
+function cleanNum(raw) {
+  var v = String(raw || '');
+  if (v.indexOf('=') >= 0) v = v.slice(v.lastIndexOf('=') + 1);
+  v = v.replace(/\b(about|approximately|approx\.?|roughly|around)\b/gi, '');
+  v = v.replace(/pi/gi, 'π').replace(/sqrt/gi, '√');
+  var m = v.search(/[a-zA-Z]/);
+  if (m >= 0) v = v.slice(0, m);
+  return v.replace(/[\s,]+$/, '').trim();
+}
+function valOf(src) { var c = mk.compile(src); if (!c.f) return null; var a = c.f(0.7); return isFinite(a) ? a : null; }
+function near(v, k, mode) { if (v === null || k === null) return false; if (Math.abs(v - k) <= 1e-9 * Math.max(1, Math.abs(k))) return true; if (k === 0) return false; if (mode === 'dec') return Math.abs(v - k) <= Math.max(0.006 * Math.abs(k), 0.0051); if (mode === 'int') return Math.abs(v - k) <= 0.5; return false; }
+function irr(src) { return /pi|sqrt|π|√/.test(src); }
+function judge(item, raw) {
+  if (STUCK.test(String(raw || ''))) return { st: 'stuck' };
+  var v = item.num ? cleanNum(raw) : (String(raw || '').indexOf('=') >= 0 ? String(raw).slice(String(raw).lastIndexOf('=') + 1) : String(raw || ''));
+  if (!v.trim()) return { st: 'stuck' };
+  var c = mk.compile(v);
+  if (c.err) return { st: 'err', msg: c.err.replace('This box uses x as its only variable, so', 'This box reads numbers and').replace('is not something it can read.', 'is not one of them. Type just the number, like 3/4 or 24π.') };
+  if (!item.num) {
+    if (mk.same(c.f, mk.cf(item.ans))) return { st: 'ok' };
+    for (var a = 0; a < (item.wrongs || []).length; a++) if (mk.same(c.f, mk.cf(item.wrongs[a][0]))) return slip(item.wrongs[a][1]);
+    return { st: 'no' };
+  }
+  if (item.tol !== undefined) {
+    var yv = c.f(0.7), kv = valOf(item.ans);
+    if (Math.abs(yv - kv) <= item.tol) return { st: 'ok' };
+    for (var tw = 0; tw < (item.wrongs || []).length; tw++) { if (Math.abs(yv - valOf(item.wrongs[tw][0])) <= item.tol) return slip(item.wrongs[tw][1]); }
+    if (kv !== 0 && Math.abs(yv - kv) <= 0.02 * Math.abs(kv)) return { st: 'close' };
+    return { st: 'no' };
+  }
+  var dec = /\.\d/.test(v) && !/[π√]/.test(v), whole = /^\s*-?\d+\s*$/.test(v);
+  var you = c.f(0.7), key = valOf(item.ans);
+  var mode = dec ? 'dec' : (whole && irr(item.ans) && Math.abs(key) >= 5 ? 'int' : '');
+  if (near(you, key, '')) return { st: 'ok' };
+  if (near(you, key, mode)) return { st: 'ok', approx: true };
+  for (var w = 0; w < (item.wrongs || []).length; w++) { var wa = item.wrongs[w][0], wv = valOf(wa); if (near(you, wv, dec ? 'dec' : (whole && irr(wa) && Math.abs(wv) >= 5 ? 'int' : ''))) return slip(item.wrongs[w][1]); }
+  if ((dec || whole) && key !== 0 && Math.abs(you - key) <= 0.1 * Math.abs(key)) return { st: 'close' };
+  return { st: 'no' };
+}
+function slip(t) { var b = String(t).split(':'), tag = b[0], v = b[1] || 'x'; if (VOC[tag]) return { st: 'slip', tag: tag, msg: VOC[tag].replace(/\$V/g, v) }; return { st: 'slip', msg: t }; }
+
+/* ---------------- typed-answer widget ---------------- */
+var ITEMS = {};
+function reg(id, item, blk) { item.id = id; item.blk = blk; ITEMS[id] = item; return item; }
+function previewOf(v, item) {
+  if (!v || !v.trim()) return '';
+  var s = item.num ? cleanNum(v) : (v.indexOf('=') >= 0 ? v.slice(v.lastIndexOf('=') + 1) : v);
+  if (!s) return '';
+  var c = mk.parse(item.num ? s : s);
+  if (c.err) return '';
+  return 'Reads as ' + M(s.replace(/π/g, 'pi').replace(/√/g, 'sqrt').replace(/\*/g, '·'));
+}
+var PAL = [['π', 'π'], ['√', '√('], ['/', '/'], ['−', '-']], PALX = [['^', '^'], ['(', '('], [')', ')']];
+function typed(id) {
+  var item = ITEMS[id], v = S.ans[id] || '', r = S.res[id], tries = S.tries[id] || 0, nh = S.hint[id] || 0;
+  var ok = r && r.st === 'ok';
+  var h = '<div class="ansrow"><span class="lhs">' + P('`' + item.ask + '`') + '</span>';
+  h += '<input class="minput" id="in-' + id + '" data-id="' + id + '" value="' + esc(v) + '" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Your answer" placeholder="Your answer">';
+  if (item.unit) h += '<span class="ptask">' + esc(item.unit) + '</span>';
+  h += '<button type="button" class="btn sm" data-act="check" data-id="' + id + '">Check</button></div>';
+  if (!item.noPal) h += '<div class="pal" aria-label="Math keys">' + (item.num ? PAL : PAL.concat(PALX)).map(function (k) { return '<button type="button" class="key" data-act="key" data-id="' + id + '" data-k="' + esc(k[1]) + '">' + k[0] + '</button>'; }).join('') + '</div>';
+  h += '<div class="pv" id="pv-' + id + '" aria-live="polite">' + (item.noPal ? '' : previewOf(v, item)) + '</div>';
+  h += '<div id="fb-' + id + '">' + fbHTML(id) + '</div>';
+  if (nh && !ok) h += '<div class="hintd">' + item.hints.slice(0, nh).map(function (t, n) { return '<p><b>Hint' + (item.hints.length > 1 ? ' ' + (n + 1) : '') + '.</b> ' + P(t) + '</p>'; }).join('') + '</div>';
+  if (item.sol && (tries >= 2 || ok)) {
+    if (S.open['sol-' + id]) h += '<div class="sol reveal">' + V(item.sol.map(function (l) { return l.indexOf('`') >= 0 ? l : l; })) + '</div>';
+    else if (!ok) h += '<div class="aft"><button type="button" class="link" data-act="sol" data-id="' + id + '">Show the solution</button></div>';
+  }
+  if (r && r.st === 'slip' && r.tag && REP[r.tag] && !item.isRep && !item.noRep) h += repairHTML(id, r.tag);
+  return h;
+}
+function fbHTML(id) {
+  var item = ITEMS[id], r = S.res[id];
+  if (!r) return '';
+  if (r.st === 'ok') return '<p class="fb fb-ok">' + (r.approx ? 'Correct. Exactly, it is ' + M(item.ans.replace(/^-/, '−')) + '.' : 'Correct.') + (item.okNote ? ' ' + P(item.okNote) : '') + '</p>';
+  if (r.st === 'err') return '<p class="fb fb-err">' + esc(r.msg) + '</p>';
+  if (r.st === 'stuck') return '<p class="fb fb-stuck">' + (item.hints && item.hints.length ? 'Here is a place to start.' : 'Try the first step, then check again.') + '</p>';
+  if (r.st === 'close') return '<p class="fb fb-stuck">' + P(item.closeMsg || 'Close. Round to two decimal places, or type the exact value, for example with π.') + '</p>';
+  if (r.st === 'slip') return '<p class="fb fb-no">' + P(r.msg) + '</p>';
+  return '<p class="fb fb-no">Not yet.' + (item.hints && item.hints.length ? ' The hint below shows the next step.' : '') + '</p>';
+}
+function repairHTML(id, tag) {
+  var rid = 'rep-' + id + '-' + tag;
+  if (!ITEMS[rid]) { var R = REP[tag]; reg(rid, { ask: R.ask, unit: R.unit, num: true, ans: R.ans, wrongs: R.wrongs, hints: [], sol: R.sol, isRep: true }, ITEMS[id].blk); }
+  return '<div class="repair reveal"><p class="cap2">Try one like it</p><p class="ptext">' + P(REP[tag].text) + '</p>' + typed(rid) + '</div>';
+}
+function doCheck(id) {
+  var item = ITEMS[id]; if (!item) return;
+  var el = document.getElementById('in-' + id); if (el) S.ans[id] = el.value;
+  var r = judge(item, S.ans[id]);
+  S.res[id] = r;
+  if (r.st === 'ok') { S.done[id] = true; if (item.onOk) item.onOk(); }
+  else if (r.st !== 'err') {
+    S.tries[id] = (S.tries[id] || 0) + (r.st === 'stuck' ? 0 : 1);
+    if (r.st === 'stuck' || r.st === 'no') S.hint[id] = Math.min((S.hint[id] || 0) + 1, (item.hints || []).length);
+  }
+  save(); redraw(item.blk);
+  var nx = document.getElementById('fb-' + id); if (nx && r.st === 'ok') { var nextIn = nextInput(id); if (nextIn) nextIn.focus(); }
+  else { var me = document.getElementById('in-' + id); if (me) me.focus(); }
+}
+function nextInput(id) { var n = ITEMS[id] && ITEMS[id].nextId; return n ? document.getElementById('in-' + n) : null; }
+
+/* ---------------- blocks ---------------- */
+var BLOCKS = {};
+function blk(name, fn) { BLOCKS[name] = fn; return '<div id="blk-' + name + '">' + fn() + '</div>'; }
+function redraw(name) { var el = document.getElementById('blk-' + name); if (el && BLOCKS[name]) el.innerHTML = BLOCKS[name](); afterDraw(); }
+function sec(id, num, title, lede) { return '<div class="col sec" id="' + id + '"><div class="sec-top">' + (num ? '<span class="sec-n">' + num + '</span>' : '') + '<h2>' + esc(title) + '</h2></div>' + (lede ? '<p class="lede">' + P(lede) + '</p>' : '') + '</div>'; }
+function prose(title, paras) { return '<div class="col prose">' + (title ? '<h3>' + esc(title) + '</h3>' : '') + paras.map(function (p) { return '<p>' + P(p) + '</p>'; }).join('') + '</div>'; }
+
+/* multiple choice, shuffled once per item and stable across visits */
+var MCS = {};
+function order(id, n) { var h = 2166136261; for (var i = 0; i < id.length; i++) { h ^= id.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } var a = []; for (var k = 0; k < n; k++) a.push(k); for (var j = n - 1; j > 0; j--) { h = (Math.imul(h, 1103515245) + 12345) >>> 0; var q = (h >>> 8) % (j + 1); var t = a[j]; a[j] = a[q]; a[q] = t; } var want = POS[id]; if (want !== undefined && want < n) { var at = a.indexOf(0); var u = a[want]; a[want] = 0; a[at] = u; } return a; }
+/* where the right answer sits in each choice row (0-based), spread on purpose */
+
+function mcHTML(id, opts, ok, blkName) {
+  MCS[id] = { opts: opts, ok: ok, blk: blkName };
+  var p = S.pick[id], good = p === ok, wl = S.wrong[id] || [];
+  var h = '<div class="mcrow">' + order(id, opts.length).map(function (k) { var cls = good && k === ok ? ' picked-ok' : wl.indexOf(k) >= 0 ? ' picked-no' : ''; return '<button type="button" class="choice' + cls + '" data-act="mc" data-id="' + id + '" data-k="' + k + '"' + (good ? ' disabled' : '') + '>' + P(opts[k][0]) + '</button>'; }).join('') + '</div>';
+  if (good) h += '<p class="fb fb-ok">Correct.</p>'; else if (p !== undefined) h += '<p class="fb fb-no">' + P(opts[p][1]) + '</p>';
+  return h;
+}
+function workedHTML(key) { var w = WORKED[key]; return '<article class="scard"><p class="cap">' + esc(w.title) + '</p><p class="ptext">' + P(w.text) + '</p>' + rowsHTML(w.rows) + '</article>'; }
+function whyHTML() {
+  return '<details class="whyd"' + (S.open.why ? ' open' : '') + ' data-more="why"><summary>Why the top speeds up <span class="opt">(Optional)</span><span class="chev" aria-hidden="true"></span></summary>' +
+    '<p>' + P('Check the worked example with two snapshots a tenth of a second apart.') + '</p><div class="sol">' + L(['`x = 6`, `y = 8`', '`x = 6.1`', '`y = sqrt(100 − 37.21) ≈ 7.924`']) + '<p style="margin:10px 0 0">' + P('The top dropped `8 − 7.924 = 0.076` feet in 0.1 seconds: about 0.76 ft/s.') + '</p></div>' +
+    '<p>' + P('Shrink the gap and the estimate closes in on 0.75. The derivative is that limit.') + '</p>' +
+    '<p>' + P('The algebra also says why the top speeds up. Solving step 4 for the top’s rate gives `R{y} = −F{x}{y} R{x}`. As the ladder flattens, `x` grows and `y` shrinks, so `F{x}{y}` grows without limit.') + '</p>' +
+    '<ul><li>For a visual explanation, watch <a href="https://www.youtube.com/watch?v=qb40J4N1fa4&amp;t=188s" target="_blank" rel="noopener">3Blue1Brown’s sliding ladder, from 3:08 to 7:43</a>.</li><li>For more worked problems, read <a href="https://tutorial.math.lamar.edu/Classes/CalcI/RelatedRates.aspx" target="_blank" rel="noopener">Related Rates in Paul’s Online Math Notes</a>.</li></ul></details>';
+}
+
+/* Speed at an Instant: Calculus I, Unit 2. Content and components. The engine is lesson-core.js. */
+
+/* ---------------- vocabulary and placement ---------------- */
+var VOC = {};
+var REP = {};
+var POS = { 'try': 1, 'settle': 0, 'pattern': 2, 'coffee-mean': 3 };
+var d = function (t) { return 16 * t * t; };
+var CLOSE_DIGITS = 'Close. Keep every digit your calculator shows; the pattern lives in the last digits.';
+
+/* ---------------- figures ---------------- */
+function strobeSVG() {
+  var top = 40, s = 7.4, cx = 170, g = '<svg viewBox="0 0 340 320" role="img" aria-label="A stone shown every quarter second as it falls from a bridge. It has fallen 1, 4, 9, 16, 25 and 36 feet, and the gaps between positions grow.">';
+  g += '<rect x="106" y="' + (top - 20) + '" width="128" height="10" rx="2" style="fill:var(--line)"/>' + txt(100, top - 11, 'bridge', 'num', 'end');
+  for (var k = 0; k <= 6; k++) {
+    var t = k / 4, y = top + s * d(t), now = k === 4;
+    g += '<circle cx="' + cx + '" cy="' + y + '" r="' + (now ? 7 : (k < 2 ? 3.5 : 5)) + '" style="fill:' + (now ? 'var(--k-tint);stroke:var(--k-line);stroke-width:2.5' : 'var(--ink)') + '"/>';
+    if (k === 2 || k === 4 || k === 6) {
+      g += txt(cx - 18, y + 5, t + ' s', 'num', 'end');
+      g += '<line x1="' + (cx + 12) + '" y1="' + y + '" x2="' + (cx + 30) + '" y2="' + y + '" style="stroke:var(--line);stroke-width:1"/>' + txt(cx + 36, y + 5, d(t) + ' ft fallen', 'num', 'start');
+    }
+  }
+  return g + '</svg>';
+}
+/* the whole fall, with a box around the enlarged window */
+function overviewSVG(w) {
+  var W = 150, H = 110, L0 = 8, R0 = 142, T0 = 8, B0 = 102, X = function (t) { return L0 + t / 2.1 * (R0 - L0); }, Y = function (v) { return B0 - v / 72 * (B0 - T0); };
+  var t0 = 1 - 0.45 * w, t1 = 1 + 1.45 * w, y0 = d(t0), y1 = d(t1), pad = (y1 - y0) * 0.08;
+  var bx = Math.max(X(t0), L0), by = Math.max(Y(y1 + pad), T0), bw = Math.max(Math.min(X(t1), R0) - bx, 3), bh = Math.max(Math.min(Y(y0 - pad), B0) - by, 3);
+  var pts = []; for (var i = 0; i <= 40; i++) { var t = 2.1 * i / 40; pts.push(X(t).toFixed(1) + ',' + Y(d(t)).toFixed(1)); }
+  var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="The whole fall from 0 to 2 seconds, with a box marking the enlarged part near t equals 1.">';
+  g += '<rect x="' + L0 + '" y="' + T0 + '" width="' + (R0 - L0) + '" height="' + (B0 - T0) + '" style="fill:var(--bg);stroke:var(--line)"/>';
+  g += '<polyline points="' + pts.join(' ') + '" style="fill:none;stroke:var(--ink);stroke-width:2"/>';
+  g += '<rect x="' + (bx - 1) + '" y="' + (by - 1) + '" width="' + (bw + 2) + '" height="' + (bh + 2) + '" style="fill:none;stroke:var(--k-line);stroke-width:2.5"/>';
+  if (bw < 12) g += '<circle cx="' + (bx + bw / 2) + '" cy="' + (by + bh / 2) + '" r="11" style="fill:none;stroke:var(--k-line);stroke-width:1.5;stroke-dasharray:3 3"/>';
+  return g + '</svg>';
+}
+/* distance graph near t = 1, zoomed so the two points span the view */
+var ZOOMS = [1, 0.1, 0.01];
+function fmt(v, dp) { var s = v.toFixed(dp); return s.replace(/\.?0+$/, ''); }
+function graphSVG(w) {
+  var W = 380, H = 260, L0 = 76, R0 = 362, T0 = 18, B0 = 222;
+  var t0 = 1 - 0.45 * w, t1 = 1 + 1.45 * w, y0 = d(t0), y1 = d(t1), pad = (y1 - y0) * 0.08;
+  y0 -= pad; y1 += pad;
+  var X = function (t) { return L0 + (t - t0) / (t1 - t0) * (R0 - L0); }, Y = function (v) { return B0 - (v - y0) / (y1 - y0) * (B0 - T0); };
+  var dp = w >= 1 ? 1 : w >= 0.1 ? 2 : 3, ydp = w >= 1 ? 0 : w >= 0.1 ? 1 : 2;
+  var g = '<svg class="enlarged" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Enlarged graph of distance fallen against time near t equals 1, with a line through the points at t equals 1 and t equals ' + fmt(1 + w, 3) + '. Its steepness is ' + fmt((d(1 + w) - 16) / w, 3) + ' feet per second.">';
+  g += '<rect x="' + L0 + '" y="' + T0 + '" width="' + (R0 - L0) + '" height="' + (B0 - T0) + '" style="fill:var(--bg);stroke:var(--line)"/>';
+  [1, 1 + w].forEach(function (t) { g += '<line x1="' + X(t) + '" y1="' + B0 + '" x2="' + X(t) + '" y2="' + (B0 + 5) + '" style="stroke:var(--muted)"/>' + txt(X(t), B0 + 20, fmt(t, dp), 'num'); });
+  [16, d(1 + w)].forEach(function (v) { g += '<line x1="' + (L0 - 5) + '" y1="' + Y(v) + '" x2="' + L0 + '" y2="' + Y(v) + '" style="stroke:var(--muted)"/>' + txt(L0 - 8, Y(v) + 5, fmt(v, ydp + 2), 'num', 'end'); });
+  g += txt((L0 + R0) / 2, H - 4, 'time (seconds)', 'num') + txt(14, T0 + 6, 'feet', 'num', 'start');
+  var pts = []; for (var i = 0; i <= 60; i++) { var t = t0 + (t1 - t0) * i / 60; pts.push(X(t).toFixed(1) + ',' + Y(d(t)).toFixed(1)); }
+  g += '<polyline points="' + pts.join(' ') + '" style="fill:none;stroke:var(--ink);stroke-width:2.5"/>';
+  var m = (d(1 + w) - 16) / w, la = t0, lb = t1;
+  g += '<line x1="' + X(la) + '" y1="' + Y(16 + m * (la - 1)) + '" x2="' + X(lb) + '" y2="' + Y(16 + m * (lb - 1)) + '" style="stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 5"/>';
+  g += '<line x1="' + X(1) + '" y1="' + Y(16) + '" x2="' + X(1 + w) + '" y2="' + Y(16) + '" style="stroke:var(--inside);stroke-width:4"/>';
+  g += '<line x1="' + X(1 + w) + '" y1="' + Y(16) + '" x2="' + X(1 + w) + '" y2="' + Y(d(1 + w)) + '" style="stroke:var(--outside);stroke-width:4"/>';
+  g += '<circle cx="' + X(1) + '" cy="' + Y(16) + '" r="6" style="fill:var(--k-tint);stroke:var(--k-line);stroke-width:2.5"/><circle cx="' + X(1 + w) + '" cy="' + Y(d(1 + w)) + '" r="5" style="fill:var(--ink)"/>';
+  return g + '</svg>';
+}
+
+/* ---------------- typed items ---------------- */
+reg('avg23', { ask: '"average speed" =', unit: 'ft/s', num: true, ans: '80',
+  wrongs: [['144', 'That is how far it has fallen in total by `t = 3`. Subtract the 64 feet it had already fallen by `t = 2`.'], ['48', 'That is 144 feet divided by 3 seconds, the average since the drop began. Use only the stretch from 2 to 3 seconds.'], ['208', 'Subtract the two distances rather than adding them: `144 − 64`.']],
+  hints: ['The distance fallen from 2 to 3 seconds is `d(3) − d(2) = 144 − 64` feet. The time it took is 1 second.'],
+  sol: ['`«"distance fallen"» = 144 − 64 = «80» "feet"`', '`{"time it took"} = 3 − 2 = {1} "second"`', '`"average speed" = F{«80»}{{1}} = 80 "feet per second"`'] }, 'avg');
+
+var ROWS101 = [
+  { id: 'r1', ask: 'd(1.01) =', ans: '16.3216', tol: 0.00005, closeMsg: CLOSE_DIGITS, wrongs: [['16.16', 'Square 1.01 first: `1.01^2 = 1.0201`. Then multiply by 16.']], hints: ['In the [Desmos scientific calculator](https://www.desmos.com/scientific), type ⟦16*1.01^2⟧.'] },
+  { id: 'r2', ask: '«"distance fallen"» =', unit: 'ft', ans: '0.3216', tol: 0.00005, closeMsg: CLOSE_DIGITS, wrongs: [['16.3216', 'That is how far it has fallen in total. Subtract the 16 feet it had already fallen by `t = 1`.']], hints: ['Subtract: `16.3216 − 16`.'] },
+  { id: 'r3', ask: '{"time it took"} =', unit: 's', ans: '0.01', tol: 0.000001, wrongs: [['1.01', 'Subtract the start time from the end time: `1.01 − 1`.']], hints: ['Subtract: `1.01 − 1`.'] },
+  { id: 'r4', ask: '"average speed" =', unit: 'ft/s', ans: '32.16', tol: 0.0005, closeMsg: CLOSE_DIGITS, wrongs: [['0.003216', 'Divide by the time, 0.01, rather than multiplying.']], hints: ['Divide: `F{0.3216}{0.01}`.'] }
+];
+ROWS101.forEach(function (r, k) { r.num = true; r.noRep = true; r.nextId = ROWS101[k + 1] ? ROWS101[k + 1].id : null; reg(r.id, r, 'turn101'); });
+
+var ROWS2 = [
+  { id: 's1', ask: '"from 2 to 2.01:"', unit: 'ft/s', ans: '64.16', tol: 0.0005, closeMsg: CLOSE_DIGITS, wrongs: [['0.6416', 'That is the distance fallen. Divide it by the time it took, 0.01 seconds.']], hints: ['`d(2.01) = 16(2.01)^2 = 64.6416`. Subtract `d(2) = 64`, then divide by 0.01.'] },
+  { id: 's2', ask: '"from 1.99 to 2:"', unit: 'ft/s', ans: '63.84', tol: 0.0005, closeMsg: CLOSE_DIGITS, wrongs: [['-63.84', 'Subtract in time order, later minus earlier: `d(2) − d(1.99)`.']], hints: ['`d(1.99) = 63.3616`. The distance fallen is `64 − 63.3616`, over 0.01 seconds.'] },
+  { id: 's3', ask: '"speed at" t = 2:', unit: 'ft/s', ans: '64', tol: 0.05, wrongs: [['64.16', 'That is the average from 2 to 2.01. The two sides close in on a whole number between 63.84 and 64.16.'], ['63.84', 'That is the average from 1.99 to 2. The two sides close in on a whole number between 63.84 and 64.16.']], hints: ['The averages from both sides are 63.84 and 64.16. What number sits between them that both are closing in on?'] }
+];
+ROWS2.forEach(function (r, k) { r.num = true; r.noRep = true; r.nextId = ROWS2[k + 1] ? ROWS2[k + 1].id : null; reg(r.id, r, 'p2'); });
+
+reg('t3', { ask: '"speed at" t = 3:', unit: 'ft/s', num: true, noRep: true, ans: '96', tol: 0.01,
+  wrongs: [['144', 'That is how far it has fallen by `t = 3`: `d(3) = 144` feet. The question asks how fast it is going.'], ['48', 'That is `F{d(3)}{3}`, its average speed since the drop began.'], ['96.016', 'That is the average from 3 to 3.001. The other side gives 95.984. What number are both closing in on?'], ['95.984', 'That is the average from 2.999 to 3. The other side gives 96.016. What number are both closing in on?']],
+  hints: ['From 3 to 3.001: `d(3.001) = 144.096016`, so the average speed is `F{0.096016}{0.001} = 96.016`.', 'From 2.999 to 3 the average is 95.984. Both sides close in on one whole number.'],
+  sol: ['`"from 3 to 3.001:" F{144.096016 − 144}{0.001} = 96.016`', '`"from 2.999 to 3:" F{144 − 143.904016}{0.001} = 95.984`', '`"speed at" t = 3: 96 "feet per second"`'] }, 'p3');
+
+var COFFEE = [
+  { id: 'c1', ask: '"from 9.9 to 10:"', unit: '°F/min', ans: '-4.1', tol: 0.0005, wrongs: [['4.1', 'The temperature is falling, so the change, `108.35 − 108.76`, is negative.'], ['-0.41', 'That is the change in temperature. Divide it by the time, 0.1 minutes.']], hints: ['`F{108.35 − 108.76}{10 − 9.9}`'] },
+  { id: 'c2', ask: '"from 10 to 10.1:"', unit: '°F/min', ans: '-4', tol: 0.0005, wrongs: [['4', 'The temperature is falling, so the change, `107.95 − 108.35`, is negative.'], ['-0.4', 'That is the change in temperature. Divide it by the time, 0.1 minutes.']], hints: ['`F{107.95 − 108.35}{10.1 − 10}`'] },
+  { id: 'c3', ask: '"rate at 10 minutes:"', unit: '°F/min', ans: '-4.05', tol: 0.1, wrongs: [['4', 'The coffee is cooling, so the rate is negative.'], ['4.05', 'The coffee is cooling, so the rate is negative.']], hints: ['The rate at 10 minutes lies between the two averages, −4.1 and −4.0. Either one, or a number between them, is a good estimate.'] }
+];
+COFFEE.forEach(function (r, k) { r.num = true; r.noRep = true; r.nextId = COFFEE[k + 1] ? COFFEE[k + 1].id : null; reg(r.id, r, 'coffee'); });
+
+/* ---------------- find the parts: secant line, run, rise ---------------- */
+var PARTS = [
+  { f: function (x) { return 16 * x * x; }, a: 1, b: 2, x0: 0, x1: 2.4, y0: 0, y1: 92, xl: 't', fl: 'd(t) = 16t^2', ans: '48', wrongs: [['16', 'That is the run times 16. Divide the rise, `64 − 16`, by the run, `2 − 1`.'], ['32', 'Divide the rise, `64 − 16 = 48`, by the run, 1.']] },
+  { f: function (x) { return 10 - x * x; }, a: 1, b: 3, x0: 0, x1: 3.8, y0: -4, y1: 13, xl: 'x', fl: 'g(x) = 10 − x^2', ans: '-4', wrongs: [['4', 'The output went down, from 9 to 1, so the rise is negative: `1 − 9 = −8`.'], ['-8', 'That is the rise. Divide it by the run, `3 − 1 = 2`.']] },
+  { f: function (x) { return Math.sqrt(x); }, a: 1, b: 9, x0: 0, x1: 10, y0: 0, y1: 3.6, xl: 'x', fl: 'h(x) = sqrt(x)', ans: '1/4', wrongs: [['2', 'That is the rise. Divide it by the run, `9 − 1 = 8`.'], ['4', 'Rise over run: put the rise, 2, on top and the run, 8, on the bottom.']] },
+  { f: function (x) { return Math.pow(2, x); }, a: 1, b: 3, x0: 0, x1: 3.5, y0: 0, y1: 11.5, xl: 't', fl: 'P(t) = 2^t', ans: '3', wrongs: [['6', 'That is the rise. Divide it by the run, `3 − 1 = 2`.'], ['8', 'That is `P(3)` by itself. The rise is `P(3) − P(1) = 8 − 2`.']] }
+];
+var ASK = ['secant', 'run', 'rise'];
+var PART_NAME = { secant: 'the secant line', run: 'the run', rise: 'the rise' };
+var PART_WHY = {
+  secant: { curve: 'That is the curve, the graph of the function itself. The secant line is the straight line through the two marked points.', run: 'That is the run, the flat side of the triangle. The secant line is the slanted straight line through the two marked points.', rise: 'That is the rise, the upright side of the triangle. The secant line is the slanted straight line through the two marked points.' },
+  run: { curve: 'That is the curve. The run is the flat side of the triangle: the change in input.', secant: 'That is the secant line. The run is the flat side of the triangle: the change in input.', rise: 'That is the rise: it measures the change in output, up or down. The run is the flat side: the change in input.' },
+  rise: { curve: 'That is the curve. The rise is the upright side of the triangle: the change in output.', secant: 'That is the secant line. The rise is the upright side of the triangle: the change in output.', run: 'That is the run: it measures the change in input. The rise is the upright side: the change in output.' }
+};
+PARTS.forEach(function (q, k) { reg('part' + k, { ask: '"slope" =', num: true, noRep: true, ans: q.ans, wrongs: q.wrongs, hints: ['Rise over run: `F{' + fmt(q.f(q.b), 3) + ' − ' + fmt(q.f(q.a), 3) + '}{' + q.b + ' − ' + q.a + '}`.'] }, 'parts'); });
+function partsSVG(q, st) {
+  var W = 360, H = 250, L0 = 40, R0 = 346, T0 = 14, B0 = 222;
+  var X = function (x) { return L0 + (x - q.x0) / (q.x1 - q.x0) * (R0 - L0); }, Y = function (v) { return B0 - (v - q.y0) / (q.y1 - q.y0) * (B0 - T0); };
+  var A = [X(q.a), Y(q.f(q.a))], B = [X(q.b), Y(q.f(q.b))], C = [B[0], A[1]];
+  var found = st.found || [], col = { secant: 'var(--ink)', run: 'var(--inside)', rise: 'var(--outside)' };
+  function seg(part, x1, y1, x2, y2, dash, label) {
+    var on = found.indexOf(part) >= 0, flash = st.flash === part;
+    return '<g class="part' + (on ? ' on' : '') + (flash ? ' miss' : '') + '" data-act="part" data-part="' + part + '" tabindex="0" role="button" aria-label="' + label + '">' +
+      '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" style="stroke:transparent;stroke-width:22"/>' +
+      '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" style="stroke:' + (on ? col[part] : 'var(--muted)') + ';stroke-width:' + (on ? 4 : 3) + (dash ? ';stroke-dasharray:7 5' : '') + '"/></g>';
+  }
+  var pts = []; for (var i = 0; i <= 80; i++) { var x = q.x0 + (q.x1 - q.x0) * i / 80; pts.push(X(x).toFixed(1) + ',' + Y(q.f(x)).toFixed(1)); }
+  var dx = B[0] - A[0], dy = B[1] - A[1], ext = 0.18;
+  var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="group" aria-label="Graph of ' + esc(q.fl.replace(/\^/g, ' to the power ')) + ' with two marked points and three straight segments to identify.">';
+  g += '<rect x="' + L0 + '" y="' + T0 + '" width="' + (R0 - L0) + '" height="' + (B0 - T0) + '" style="fill:var(--bg);stroke:var(--line)"/>';
+  g += '<g class="part curve" data-act="part" data-part="curve" tabindex="0" role="button" aria-label="The curved line"><polyline points="' + pts.join(' ') + '" style="fill:none;stroke:transparent;stroke-width:20"/><polyline points="' + pts.join(' ') + '" style="fill:none;stroke:var(--ink);stroke-width:2.5"/></g>';
+  g += seg('secant', A[0] - ext * dx, A[1] - ext * dy, B[0] + ext * dx, B[1] + ext * dy, true, 'Straight line A');
+  g += seg('run', A[0], A[1], C[0], C[1], false, 'Segment B');
+  g += seg('rise', C[0], C[1], B[0], B[1], false, 'Segment C');
+  var up = q.f(q.b) >= q.f(q.a);
+  [[q.a, A, true], [q.b, B, false]].forEach(function (p) {
+    var lab = '(' + fmt(p[0], 2) + ', ' + fmt(q.f(p[0]), 3) + ')', left = p[2] ? true : (up ? true : true);
+    var lx = left ? p[1][0] - 9 : p[1][0] + 10, ly = (p[2] && !up) ? p[1][1] + 22 : (!p[2] && !up ? p[1][1] + 22 : p[1][1] - 12);
+    g += '<circle cx="' + p[1][0] + '" cy="' + p[1][1] + '" r="5.5" style="fill:var(--ink)"/>' + txt(lx, ly, lab, 'num', left ? 'end' : 'start');
+  });
+  return g + '</svg>';
+}
+function partsHTML() {
+  var st = S.parts || (S.parts = { round: 0, step: 0, found: [] }), q = PARTS[st.round], id = 'part' + st.round;
+  var h = '<article class="scard" id="card-parts"><p class="ctitle">Find the parts: round ' + (st.round + 1) + ' of ' + PARTS.length + '</p>';
+  h += '<p class="ptext">' + P('The graph shows `' + q.fl + '` with two points marked. ' + (st.step < 3 ? 'Click ' + PART_NAME[ASK[st.step]] + '.' : 'Now find the slope of the secant line, rise over run.')) + '</p>';
+  h += '<div class="partsfig">' + partsSVG(q, st) + '</div>';
+  if (st.msg) h += '<p class="fb fb-no">' + P(st.msg) + '</p>';
+  if (st.step >= 3) {
+    h += '<p class="gread">' + M('"slope" = F{«"rise"»}{{"run"}}') + '</p>' + typed(id);
+    if (S.done[id]) h += st.round < PARTS.length - 1 ? '<button type="button" class="btn sm" data-act="partsNext">Next graph</button>' : '<p class="note">' + P('All four done. The slope of a secant line is the average rate of change between its two points, and it can be negative when the output goes down.') + '</p>';
+  } else if (st.step > 0) h += '<p class="fb fb-ok">Correct.</p>';
+  return h + '</article>';
+}
+function partClick(part) {
+  var st = S.parts; if (!st || st.step >= 3) return;
+  var want = ASK[st.step];
+  if (part === want) { st.found.push(part); st.step++; st.msg = ''; st.flash = ''; }
+  else { st.msg = PART_WHY[want][part]; st.flash = part; }
+  save(); redraw('parts');
+}
+
+/* ---------------- more practice ---------------- */
+var MORE = [
+  { id: 'm1', text: 'Find the average rate of change of `f(x) = x^2 + 1` from `x = 1` to `x = 4`.', ask: '"average rate" =', ans: '5', wrongs: [['15', 'That is the change in output, `17 − 2`. Divide it by the change in input, `4 − 1 = 3`.'], ['4.25', 'That is `F{f(4)}{4}`. Use the change in output over the change in input: `F{f(4) − f(1)}{4 − 1}`.'], ['-5', 'Subtract in the same order on top and bottom: `F{f(4) − f(1)}{4 − 1}`.']], hints: ['`f(4) = 17` and `f(1) = 2`. Then `F{17 − 2}{4 − 1}`.'] },
+  { id: 'm2', text: 'A phone\u2019s battery is at 20% when you plug it in and at 65% thirty minutes later. Find the average rate at which it charges.', ask: '"average rate" =', unit: '% per min', ans: '1.5', wrongs: [['45', 'That is how much it charged in total. Divide by the 30 minutes it took.'], ['2.1667', 'That is `F{65}{30}`. Use the change in charge, `65 − 20 = 45`, over 30 minutes.']], hints: ['The charge went up by `65 − 20 = 45` percentage points in 30 minutes.'] },
+  { id: 'm3', text: 'A bacteria culture is growing. Its average growth rate is 7.99 thousand cells per hour over the hundredth of an hour before `t = 3`, and 8.001 thousand per hour over the thousandth of an hour after. Estimate its growth rate at `t = 3`.', ask: '"rate at" t = 3:', unit: 'thousand per hr', ans: '8', tol: 0.0005, wrongs: [['7.99', 'That is one side only. The other side gives 8.001. What number are both closing in on?'], ['8.001', 'That is one side only. The other side gives 7.99. What number are both closing in on?']], hints: ['The two averages, 7.99 and 8.001, sit on either side of one whole number.'] }
+];
+MORE.forEach(function (q) { q.num = true; q.noRep = true; reg(q.id, q, 'more'); });
+function moreHTML() { return card('More practice: average rates', MORE.map(function (q, k) { return '<div class="moreq"><p class="ptext"><b>(' + 'abc'[k] + ')</b> ' + P(q.text) + '</p>' + typed(q.id) + '</div>'; }).join(''), 'card-more'); }
+
+/* ---------------- choice items ---------------- */
+var TRY = [['Faster than 16 feet per second', ''],
+  ['16 feet per second, because it fell 16 feet in that first second', 'That is its average speed over the first second. It sped up the whole time, so at the end of that second it was going faster than its average.'],
+  ['Slower than 16 feet per second', 'It speeds up the whole way down. So at the end of the first second it is going faster than its average for that second, which is 16 feet per second.']];
+var SETTLE = [['32', ''], ['33', 'Look at the rows closest to `t = 1`: 32.016 and 31.984. Both are within 0.02 of one whole number.'], ['16', 'At `t = 1` the stone has fallen 16 feet. That is where it is, not how fast it is going.'], ['0', 'The time intervals shrink toward 0, but the average speeds do not. They stay near one number.']];
+var PATTERN = [['`32t`', ''], ['`16t^2`', 'That formula gives how far the stone has fallen, not how fast it is going.'], ['`31 + t`', 'That fits `t = 1` but gives 33 at `t = 2`, not 64.'], ['`64t − 32`', 'That fits `t = 1` but gives 96 at `t = 2`, not 64.']];
+var MEAN = [['At 10 minutes, the coffee is cooling at about 4 °F per minute.', ''], ['The coffee is at −4 °F at 10 minutes.', 'The rate says how fast the temperature changes, not what it is. At 10 minutes the coffee is 108.35 °F.'], ['The coffee will lose 4 °F every minute from now on.', 'The rate describes that one moment. Coffee cools more slowly as it gets closer to room temperature, so the rate changes.'], ['The coffee lost 4 °F during its first 10 minutes.', 'That would be a total change. The rate is per minute, at the 10-minute mark.']];
+
+/* ---------------- components ---------------- */
+function card(cap, body, id) { return '<article class="scard"' + (id ? ' id="' + id + '"' : '') + '>' + (cap ? '<p class="ctitle">' + P(cap) + '</p>' : '') + body + '</article>'; }
+function show(lines) { return '<div class="sbox multi workbox">' + L(lines.map(function (l) { return '`' + l + '`'; })) + '</div>'; }
+function rowsTyped(list) {
+  return '<div class="srows">' + list.map(function (r) {
+    return '<div class="srow tr' + (S.done[r.id] ? ' ok' : '') + '"><div class="sval">' + typed(r.id) + '</div></div>';
+  }).join('') + '</div>';
+}
+function choice(id, opts, ok, blkName) { return mcHTML(id, opts, ok, blkName); }
+
+function heroHTML() {
+  return '<header class="hero col"><p class="kicker">Calculus I · Unit 2</p><h1>Speed at an Instant</h1><p class="dek">How to find how fast something is changing at one exact moment.</p>' +
+    '<figure class="emblem" aria-label="Average speed equals distance fallen divided by the time it took.">' +
+    '<div class="emb-math" aria-hidden="true">' + M('"average speed" = F{«"distance fallen"»}{{"time it took"}}') + '</div>' +
+    '<div class="emb-sub">' + P('Make the time shorter and shorter, and this average closes in on the speed at one instant.') + '</div>' +
+    '<figcaption class="emb-legend"><span class="leg leg-out"><span class="sw sw-out2"></span><span><b>Distance fallen</b>, the change in output</span></span><span class="leg leg-in"><span class="sw sw-in"></span><span><b>Time it took</b>, the change in input</span></span></figcaption></figure></header>';
+}
+function questionHTML() {
+  return '<div class="col prose"><p>' + P('You drop a stone from a bridge. It falls faster and faster as it goes. Physics gives the distance it has fallen after `t` seconds:') + '</p><p class="disp">' + M('d(t) = 16t^2 "feet"') + '</p><p>' + P('For example, after 1 second it has fallen `d(1) = 16(1)^2 = 16` feet.') + '</p></div>' +
+    '<div class="col"><figure class="pfig strobe">' + strobeSVG() + '<figcaption>' + P('The figure shows the stone every quarter second. It falls 1 foot in the first quarter second, then 3 feet, then 5, then 7. Each quarter second it falls farther than the one before.') + '</figcaption></figure></div>';
+}
+function tryHTML() { return card('Try first', '<p class="ptext">' + P('How fast is the stone falling at exactly `t = ‹1›` second? Make your best guess.') + '</p>' + choice('try', TRY, 0, 'try') + (S.pick['try'] === 0 ? '<p class="note">' + P('Its average over the first second was 16 feet per second, and it was speeding up, so at `t = 1` it was going faster than that.') + '</p>' : '')); }
+function avgExampleHTML() {
+  return card('Example: from `t = 1` to `t = 2`', show(['«"distance fallen"» = d(2) − d(1)', '= 16(2)^2 − 16(1)^2', '= 64 − 16 = «48» "feet"', '{"time it took"} = 2 − 1 = {1} "second"', '"average speed" = F{«48»}{{1}}', '= 48 "feet per second"']));
+}
+function avgTurnHTML() { return card('Your turn', '<p class="ptext">' + P('Find the stone’s average speed from `t = 2` to `t = 3`. By `t = 3` it has fallen `d(3) = 144` feet.') + '</p>' + typed('avg23'), 'card-avg'); }
+function zeroHTML() {
+  return card('Try the instant itself: from `t = 1` to `t = 1`', show(['«"distance fallen"» = d(1) − d(1)', '= 16 − 16 = «0»', '{"time it took"} = 1 − 1 = {0}', '"average speed" = F{«0»}{{0}}']) +
+    '<p class="note">' + P('Zero divided by zero has no value. In no time the stone covers no distance, and that says nothing about how fast it is going.') + '</p>');
+}
+function shortExampleHTML() {
+  return card('Example: from `t = 1` to `t = 1.1`', show(['d(1.1) = 16(1.1)^2', '= 16(1.21) = 19.36', '«"distance fallen"» = 19.36 − 16', '= «3.36» "feet"', '{"time it took"} = 1.1 − 1 = {0.1} "second"', '"average speed" = F{«3.36»}{{0.1}}', '= 33.6 "feet per second"']) );
+}
+function turn101HTML() { return card('Your turn: from `t = 1` to `t = 1.01`', '<p class="ptext">' + P('Fill in each line and check it before moving on.') + '</p>' + rowsTyped(ROWS101), 'card-101'); }
+function num(v) { var s = String(v).split('.'); return '<span class="ip">' + s[0] + '</span><span class="fp">' + (s[1] ? '.' + s[1] : '') + '</span>'; }
+function mineCell() { var v = S.ans.r4 && S.ans.r4.trim(); return v ? '<span class="mine">' + esc(v) + '</span>' : '<span class="tbd">your answer from above</span>'; }
+function tablesHTML() {
+  var mine = S.ans.r4 && S.ans.r4.trim() ? esc(S.ans.r4.trim()) : '';
+  var right = [['1 to 2', 48], ['1 to 1.1', 33.6], ['1 to 1.01', 'MINE'], ['1 to 1.001', 32.016]];
+  var left = [['0 to 1', 16], ['0.9 to 1', 30.4], ['0.99 to 1', 31.84], ['0.999 to 1', 31.984]];
+  function tab(title, rows) {
+    return '<table class="avt"><caption>' + title + '</caption><thead><tr><th scope="col">Seconds</th><th scope="col">Average speed (ft/s)</th></tr></thead><tbody>' +
+      rows.map(function (r, k) { return '<tr' + (k === rows.length - 1 ? ' class="near"' : '') + '><td>' + r[0] + '</td><td class="nv">' + (r[1] === 'MINE' ? '<span id="mycell">' + mineCell() + '</span>' : num(r[1])) + '</td></tr>'; }).join('') + '</tbody></table>';
+  }
+  return '<div class="col"><div class="tables">' + tab('Intervals starting at t = 1', right) + tab('Intervals ending at t = 1', left) + '</div></div>';
+}
+function settleHTML() {
+  var ok = S.pick.settle === 0;
+  return card('', '<p class="ptext">' + P('As the intervals shrink, the averages in both tables close in on one number. Which number?') + '</p>' + choice('settle', SETTLE, 0, 'settle') +
+    (ok ? '<p class="note">' + P('From one side the averages come down toward 32, and from the other they climb up toward 32. No average lands exactly on 32, but they get as close to it as you like. So at `t = 1` the stone is falling at **32 feet per second**, faster than the 16 you may have guessed at the start.') + '</p><p class="note">' + P('This works because the two sides agree. If the averages from the two sides closed in on two different numbers, there would be no single speed at that instant.') + '</p>' : ''));
+}
+function ruleHTML() {
+  return '<div class="col"><section class="rule" aria-label="Two definitions to memorize"><h3 class="rule-name">Rates of Change</h3><div class="memo"><span>Memorize this</span></div>' +
+    '<p class="rule-sub">' + P('The **average rate of change** of `f` from `a` to `b`:') + '</p><div class="rule-eq">' + M('F{«f(b) − f(a)»}{{b − a}}') + '</div>' +
+    '<p class="rule-words">' + P('The **instantaneous rate of change** at a point is the number these averages close in on as the interval around that point shrinks, from both sides.') + '</p></section></div>';
+}
+function graphHTML() {
+  var z = S.tab.zoom || 0, w = ZOOMS[z], rise = d(1 + w) - 16, m = rise / w;
+  var h = '<div class="col"><section class="graphcard" aria-label="Distance graph, zoomed in on t = 1"><div class="zoombtns" role="group" aria-label="Choose the interval">';
+  ZOOMS.forEach(function (zw, k) { h += '<button type="button" class="zb' + (k === z ? ' on' : '') + '" aria-pressed="' + (k === z) + '" data-act="zoom" data-k="' + k + '">1 to ' + fmt(1 + zw, 2) + '</button>'; });
+  h += '</div><div class="overview">' + overviewSVG(w) + '<p class="note small">' + P('The small graph shows the whole fall. The box marks the part shown enlarged below. Each button zooms in ten times closer than the one before.') + '</p></div><div class="gwrap" id="gwrap"><p class="enl">Enlarged view</p>' + graphSVG(w) + '</div>';
+  h += '<p class="gread">' + P('Steepness of the line: `F{«' + fmt(rise, 6) + '»}{{' + fmt(w, 2) + '}} = ' + fmt(m, 3) + '` feet per second') + '</p>';
+  h += '<p class="note small">' + P(z === 2 ? 'Zoomed in this close, the curve between the two points is almost a straight line, with a slope of almost exactly 32. That is what the speed at an instant looks like on a graph: the steepness of the curve at that point, seen up close.' : 'Choose the next interval to zoom in.') + '</p></section></div>';
+  return h;
+}
+function p2HTML() {
+  return card('Practice: the speed at `t = 2`', '<p class="ptext">' + P('Estimate how fast the stone is falling at `t = 2`. It has fallen `d(2) = 64` feet by then. One interval is done for you. For the speed, give the number both averages close in on. Use the [Desmos scientific calculator](https://www.desmos.com/scientific) for the arithmetic.') + '</p>' +
+    show(['"from 2 to 2.1:" F{d(2.1) − d(2)}{0.1}', '= F{70.56 − 64}{0.1} = 65.6']) + rowsTyped(ROWS2), 'card-p2');
+}
+function p3HTML() { return card('Practice: the speed at `t = 3`', '<p class="ptext">' + P('Estimate how fast the stone is falling at `t = 3`. Use the [Desmos scientific calculator](https://www.desmos.com/scientific) to find the average speeds from 3 to 3.001 and from 2.999 to 3. Then enter the number both close in on.') + '</p>' + typed('t3'), 'card-t3'); }
+function patternHTML() {
+  var ok = S.pick.pattern === 0;
+  return card('What do you notice?', '<p class="ptext">' + P('At `t = 1`, 2 and 3 seconds, the stone falls at 32, 64 and 96 feet per second. Which formula gives its speed at any time `t`?') + '</p>' + choice('pattern', PATTERN, 0, 'pattern') +
+    (ok ? '<p class="note">' + P('You have found the stone’s speed at every instant, `32t` feet per second, with nothing but averages. Unit 4 gives this its name: the derivative.') + '</p>' : ''));
+}
+function coffeeHTML() {
+  return card('Practice: a cooling cup of coffee', '<p class="ptext">' + P('A cup of coffee cools on a desk. The table gives its temperature `T`, in °F, at three times near 10 minutes. Because the temperature is falling, its rate of change is negative.') + '</p>' +
+    '<table class="avt small"><thead><tr><th scope="col">Minutes</th><th scope="col">9.9</th><th scope="col">10</th><th scope="col">10.1</th></tr></thead><tbody><tr><th scope="row">°F</th><td>108.76</td><td>108.35</td><td>107.95</td></tr></tbody></table>' +
+    '<p class="ptext">Find the average rate of change on each side. Then estimate the rate at 10 minutes: either average, or a number between them, is a good estimate.</p>' + rowsTyped(COFFEE) +
+    (S.done.c3 ? '<p class="ptext" style="margin-top:22px">' + P('What does that rate mean?') + '</p>' + choice('coffee-mean', MEAN, 0, 'coffee') : ''), 'card-coffee');
+}
+var EXAM = {
+  q: 'A rocket’s altitude is `h(t) = 300 + 50t − 1.5t^2` meters, `t` seconds after a controlled burn begins. Its **velocity** is its rate of change of altitude, in meters per second. The rocket is slowing down, so this time the averages from intervals that start at `t = 5` run low. The tables give its average velocity over short intervals that start or end at `t = 5`.',
+  rowsR: [['5 to 6', '33.5'], ['5 to 5.1', '34.85'], ['5 to 5.01', '34.985'], ['5 to 5.001', '34.9985']],
+  rowsL: [['4 to 5', '36.5'], ['4.9 to 5', '35.15'], ['4.99 to 5', '35.015'], ['4.999 to 5', '35.0015']],
+  parts: ['(a) Estimate the rocket’s instantaneous velocity at `t = 5` seconds, with units.', '(b) Suppose a different rocket gave averages that close in on 35 from intervals starting at `t = 5`, but on 40 from intervals ending at `t = 5`. Could you give one instantaneous velocity at `t = 5`? Explain why or why not.'],
+  sol: ['(a) From one side the averages are 33.5, 34.85, 34.985, 34.9985, climbing toward 35. From the other side they are 36.5, 35.15, 35.015, 35.0015, coming down toward 35. Both close in on the same number, so the instantaneous velocity at `t = 5` is about **35 meters per second**.', '(b) No. The method works only when the averages from both sides close in on the same number. Here they close in on 35 and 40, so there is no single instantaneous velocity at `t = 5`.'],
+  checks: ['I looked at both tables, not just one.', 'My answer to (a) has units: meters per second.', 'In (b), I said the two sides must agree, and here they do not.']
+};
+function examHTML() {
+  function rows(r) { return r.map(function (x) { return '<tr><td>' + x[0] + '</td><td class="nv">' + num(x[1]) + '</td></tr>'; }).join(''); }
+  var h = '<article class="exam"><p class="exam-q">' + P(EXAM.q) + '</p><div class="tables">' +
+    '<table class="avt"><caption>Starting at t = 5</caption><thead><tr><th scope="col">Seconds</th><th scope="col">m/s</th></tr></thead><tbody>' + rows(EXAM.rowsR) + '</tbody></table>' +
+    '<table class="avt"><caption>Ending at t = 5</caption><thead><tr><th scope="col">Seconds</th><th scope="col">m/s</th></tr></thead><tbody>' + rows(EXAM.rowsL) + '</tbody></table></div>' +
+    EXAM.parts.map(function (p) { return '<p class="exam-q">' + P(p) + '</p>'; }).join('');
+  if (!S.open.exam) return h + '<p class="muted small-sans">Write your answers on paper first, the way you would on the exam.</p><button type="button" class="btn" data-act="exam">I have written it out</button></article>';
+  h += '<div class="reveal"><p class="cap2">Model answer</p>' + EXAM.sol.map(function (s) { return '<p>' + P(s) + '</p>'; }).join('') + '</div><fieldset class="self"><legend>Check your work against it</legend>';
+  EXAM.checks.forEach(function (c, k) { h += '<label class="ck"><input type="checkbox" data-act="ck" data-k="' + k + '"' + (S.checks[k] ? ' checked' : '') + '> <span>' + P(c) + '</span></label>'; });
+  return h + '</fieldset></article>';
+}
+function closeHTML() {
+  return '<div class="col closer"><ul class="reads"><li><a href="https://tutorial.math.lamar.edu/Classes/CalcI/Tangents_Rates.aspx" target="_blank" rel="noopener">Paul\u2019s Online Math Notes: Tangent Lines and Rates of Change</a></li><li><a href="https://openstax.org/books/calculus-volume-1/pages/2-1-a-preview-of-calculus" target="_blank" rel="noopener">OpenStax Calculus Volume 1: 2.1 A Preview of Calculus</a></li></ul></div>';
+}
+
+/* ---------------- page ---------------- */
+function page() {
+  return '<header class="bar"><div class="bar-in"><a class="brand" href="#top">Speed at an Instant</a><nav class="toc" aria-label="Sections"><a href="#s1">The Question</a><a href="#s2">Averages</a><a href="#s3">Shrinking the Time</a><a href="#s4">The Graph</a><a href="#s5">Practice</a><a href="#exam">Rehearsal</a></nav></div></header>' +
+    '<main id="top">' + heroHTML() +
+    sec('s1', '1', 'The Question', '') + questionHTML() + '<div class="col">' + blk('try', tryHTML) + '</div>' +
+    sec('s2', '2', 'Average Speed', '') +
+    prose('', ['You already know how to find an average speed. Divide the distance covered by the time it took.', 'For a falling object, the distance fallen during a stretch of time is how far it has fallen by the end minus how far it had fallen by the start.']) +
+    '<div class="col">' + avgExampleHTML() + blk('avg', avgTurnHTML) + '</div>' +
+    prose('', ['An average speed is one kind of **average rate of change**: the change in a quantity divided by the change in its input, here time.']) +
+    prose('The Trouble with Averages', ['The stone\u2019s average speed from `t = 1` to `t = 2` was 48 feet per second. Because it sped up throughout that second, it was going slower than 48 at `t = 1` and faster than 48 at `t = 2`.', 'So try the instant `t = 1` itself, with no time passing.']) +
+    '<div class="col">' + zeroHTML() + '</div>' +
+    sec('s3', '3', 'Shrinking the Time', '') +
+    prose('', ['Use a short stretch of time, called an **interval**, instead of none. Over a very short interval the stone barely speeds up, so its average speed is very close to its speed at the start of that interval.', 'Use the [Desmos scientific calculator](https://www.desmos.com/scientific) for the arithmetic. Typing ⟦16*1.1^2⟧ gives 19.36.']) +
+    '<div class="col">' + shortExampleHTML() + blk('turn101', turn101HTML) + '</div>' +
+    prose('', ['Here is what happens as the interval keeps shrinking. The first table uses intervals that start at `t = 1`. The stone is speeding up, so these averages run a little fast.', 'The second table uses intervals that end at `t = 1`. These averages run a little slow. Subtract in the same order as before, later minus earlier:']) + '<div class="col">' + show(['"from 0.9 to 1:" F{d(1) − d(0.9)}{1 − 0.9}', '= F{16 − 12.96}{0.1} = 30.4']) + '</div>' + blk('tables', tablesHTML) + '<div class="col">' + blk('settle', settleHTML) + '</div>' + prose('', ['The same idea works for any quantity that changes, not only a falling stone. Write the quantity as a function `f` of its input, and the interval as running from `a` to `b`.', 'For the stone, `f` is `d`. From `a = 1` to `b = 2`, the formula gives `F{d(2) − d(1)}{2 − 1} = F{64 − 16}{1} = 48`, the average speed from the first example.']) + ruleHTML() +
+    sec('s4', '4', 'The Graph', '') +
+    prose('', ['On a graph of distance fallen against time, an average speed is the slope of the dashed line through two points: rise over run, as in Unit 1. The blue run is the time it took and the orange rise is the distance fallen. A line through two points on a curve is called a **secant line**.']) + blk('graph', graphHTML) + prose('', ['Each graph below shows a function with two points marked. Find the secant line, its run and its rise, then compute its slope.']) + '<div class="col">' + blk('parts', partsHTML) + '</div>' +
+    sec('s5', '5', 'Practice', '') + '<div class="col">' + blk('p2', p2HTML) + blk('p3', p3HTML) + blk('pattern', patternHTML) + blk('more', moreHTML) + blk('coffee', coffeeHTML) + '</div>' +
+    sec('exam', '', 'Exam Rehearsal', '') + '<div class="col">' + blk('exam', examHTML) + '</div>' +
+    sec('close', '', 'Read More', '') + closeHTML() + '</main>';
+}
+
+/* ---------------- events ---------------- */
+function afterDraw() {}
+function on(root) {
+  root.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var a = b.dataset.act, id = b.dataset.id, k = b.dataset.k !== undefined ? +b.dataset.k : null;
+    if (a === 'check') { doCheck(id); }
+    else if (a === 'key') { var inp = document.getElementById('in-' + id); if (inp) { var st = inp.selectionStart || inp.value.length, en = inp.selectionEnd || inp.value.length; inp.value = inp.value.slice(0, st) + b.dataset.k + inp.value.slice(en); inp.focus(); var p = st + b.dataset.k.length; inp.setSelectionRange(p, p); inp.dispatchEvent(new Event('input', { bubbles: true })); } }
+    else if (a === 'sol') { S.open['sol-' + id] = true; save(); redraw(ITEMS[id].blk); }
+    else if (a === 'mc') { var mc = MCS[id]; S.pick[id] = k; if (k !== mc.ok) S.wrong[id] = (S.wrong[id] || []).concat([k]); save(); redraw(mc.blk); }
+    else if (a === 'part') partClick(b.dataset.part);
+    else if (a === 'partsNext') { S.parts = { round: Math.min(S.parts.round + 1, PARTS.length - 1), step: 0, found: [] }; save(); redraw('parts'); }
+    else if (a === 'zoom') { S.tab.zoom = k; save(); redraw('graph'); }
+    else if (a === 'exam') { S.open.exam = true; save(); redraw('exam'); }
+  });
+  root.addEventListener('keydown', function (e) { var g = e.target.closest && e.target.closest('[data-act="part"]'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); partClick(g.dataset.part); } });
+  root.addEventListener('change', function (e) { var t = e.target; if (t.dataset && t.dataset.act === 'ck') { S.checks[t.dataset.k] = t.checked; save(); } });
+  root.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.classList.contains('minput')) {
+      var id = t.dataset.id; S.ans[id] = t.value;
+      var pv = document.getElementById('pv-' + id); if (pv && !ITEMS[id].noPal) pv.innerHTML = previewOf(t.value, ITEMS[id]);
+      if (id === 'r4') { var mc2 = document.getElementById('mycell'); if (mc2) mc2.innerHTML = mineCell(); }
+      if (S.res[id] && S.res[id].st === 'ok') { delete S.res[id]; var fb = document.getElementById('fb-' + id); if (fb) fb.innerHTML = ''; }
+      save();
+    }
+  });
+  root.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('minput')) { e.preventDefault(); doCheck(e.target.dataset.id); } });
+}
+Object.keys(ITEMS).forEach(function (k) { if (ITEMS[k].num) ITEMS[k].noPal = true; });
+var app = document.getElementById('app');
+app.innerHTML = page();
+on(app);
+window.__RR = { mk: mk, judge: judge, ITEMS: ITEMS, MCS: MCS, order: order, POS: POS, d: d, graphSVG: graphSVG, ZOOMS: ZOOMS, KEY: KEY, M: M, P: P };
+
+})();
+</script>
+<script>
+/* window.__selfCheck() -> Promise<{ok, checks:[{name, ok, detail}]}>, the contract used by
+   swachtel-dev/rize-interactive-health. Reads the rendered page, drives one real input, and
+   restores the student's saved progress afterwards. */
+(function () {
+  function visibleText() { var c = document.body.cloneNode(true); c.querySelectorAll('script,style,template').forEach(function (n) { n.remove(); }); return c.textContent || ''; }
+  var checks = [];
+  function reg(name, fn) { checks.push({ name: name, fn: fn }); }
+  reg('sections rendered', function () {
+    var miss = ['s1', 's2', 's3', 's4', 's5', 'exam', 'close'].filter(function (id) { var e = document.getElementById(id); return !e || !e.querySelector('h2') || !e.querySelector('h2').textContent.trim(); });
+    return miss.length ? { ok: false, detail: 'missing: ' + miss.join(', ') } : true;
+  });
+  reg('no authoring markup leaked', function () {
+    var t = visibleText(), bad = ['`', '‹', '›', '«', '»', 'F{', '**', 'undefined', 'NaN', '[object'].filter(function (s) { return t.indexOf(s) >= 0; });
+    return bad.length ? { ok: false, detail: 'found: ' + bad.join(' ') } : true;
+  });
+  reg('answer keys judge themselves correct; no wrong answer equals a key', function () {
+    var RR = window.__RR, errs = [], all = Object.keys(RR.ITEMS).map(function (k) { return RR.ITEMS[k]; });
+    all.forEach(function (it) {
+      var r = RR.judge(it, it.ans); if (r.st !== 'ok') errs.push(it.id + ' key judged ' + r.st);
+      (it.wrongs || []).forEach(function (w) { var q = RR.judge(it, w[0]); if (q.st === 'ok') errs.push(it.id + ' wrong ' + w[0] + ' accepted'); });
+    });
+    return errs.length ? { ok: false, detail: errs.join('; ') } : { ok: true, detail: all.length + ' items' };
+  });
+  reg('stone figures: average speeds 48, 33.6, 32.16 on the graph intervals', function () {
+    var RR = window.__RR, got = RR.ZOOMS.map(function (w) { return Math.round((RR.d(1 + w) - RR.d(1)) / w * 1000) / 1000; });
+    return got.join(',') === '48,33.6,32.16' ? true : { ok: false, detail: got.join(',') };
+  });
+  reg('typing an answer and pressing Check says Correct', async function () {
+    var RR = window.__RR, saved = null; try { saved = localStorage.getItem(RR.KEY); } catch (e) {}
+    var inp = document.getElementById('in-avg23'); if (!inp) return { ok: false, detail: 'no input' };
+    inp.value = '80 ft/s'; inp.dispatchEvent(new Event('input', { bubbles: true }));
+    document.querySelector('[data-act="check"][data-id="avg23"]').click();
+    await new Promise(function (r) { setTimeout(r, 50); });
+    var fb = (document.getElementById('fb-avg23') || {}).textContent || '';
+    try { if (saved === null) localStorage.removeItem(RR.KEY); else localStorage.setItem(RR.KEY, saved); } catch (e) {}
+    return fb.indexOf('Correct.') === 0 ? true : { ok: false, detail: fb || 'no feedback' };
+  });
+  reg('right answers are not in one fixed position across choice items', function () {
+    var RR = window.__RR, defs = { 'try': 3, 'settle': 4, 'pattern': 4, 'coffee-mean': 4 }, ids = Object.keys(defs);
+    var pos = ids.map(function (id) { return RR.order(id, defs[id]).indexOf(0); });
+    var distinct = pos.filter(function (v, i) { return pos.indexOf(v) === i; }).length;
+    return distinct >= 3 ? { ok: true, detail: 'positions ' + pos.join(',') } : { ok: false, detail: 'positions ' + pos.join(',') };
+  });
+  reg('no sideways page scroll', function () { var w = document.documentElement.scrollWidth, v = window.innerWidth; return w <= v + 1 ? true : { ok: false, detail: w + ' > ' + v }; });
+  window.__selfCheck = async function () {
+    var out = [];
+    for (var i = 0; i < checks.length; i++) { try { var r = await checks[i].fn(); out.push(r === true || r === undefined ? { name: checks[i].name, ok: true } : { name: checks[i].name, ok: !!r.ok, detail: r.detail }); } catch (e) { out.push({ name: checks[i].name, ok: false, detail: String(e && e.message || e) }); } }
+    return { ok: out.every(function (c) { return c.ok; }), checks: out };
+  };
+})();
+
+</script>
+</body>
+</html>
