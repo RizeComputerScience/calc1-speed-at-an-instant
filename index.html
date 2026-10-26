@@ -34,6 +34,11 @@
   --k-tint:#FFE771;--k-line:#A78700;--ok:#1C7340;--ok-tint:#E0F2E5;--bad:#B1251D;--bad-tint:#FBE6E4;--hint:#3B5469;--hint-tint:#E4ECF3;
   --s1:#1A63CE;--s2:#D86500;--s3:#009784;--s4:#6441A9;--s5:#A68300;--s6:#AE2C77;}
 
+/* figure fills in dark mode: the output tint as a light wash (a deep orange at 16 percent) instead of an opaque brown, so the board's
+   grid, the curve and labels read through a shaded area. Only inside svg, so chrome keeps --outside-tint. palette_check.py composites
+   it over the board and checks text (4.5:1) and marks (3:1) on it. */
+:root:not([data-theme="light"]) svg{--outside-tint:rgb(216 101 0 / .16)}
+
 /* ---------- type ---------- */
 html body{font-size:19px;line-height:1.65;font-variant-numeric:lining-nums;background:var(--bg)}
 html h1,html h2,html h3{font-weight:400;letter-spacing:-.01em;text-wrap:balance}
@@ -175,7 +180,7 @@ html .sl-lab{font-family:var(--serif);font-weight:400;font-size:17px}
 html .sl-in{accent-color:var(--ink)}
 html .zb{font-family:var(--serif);font-weight:400;font-size:17px;border:1.5px solid var(--line-strong);border-radius:8px;background:var(--surface);min-height:46px;padding:0 18px}
 html .zb.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-html .shared-badge{font-family:var(--serif);font-weight:400;border-radius:6px}
+html .shared-badge{font-family:var(--serif);font-weight:400;border-radius:6px;color:var(--muted);background:var(--soft);border:1px solid var(--line-strong)} /* chrome, so neutral: the highlighter is the plugged-in value's */
 html .whyd{max-width:680px;background:transparent;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:4px 0}
 html .whyd summary{font-family:var(--serif);font-weight:400;font-size:19px}
 html code{background:var(--panel)}
@@ -321,7 +326,8 @@ sup.k{padding:0 .1em}
 .lhs{font-size:24px;white-space:nowrap}
 .minput{flex:1 1 200px;min-width:0;font-family:var(--mono);font-size:19px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;min-height:54px;padding:10px 14px;width:100%}
 .minput:focus{border-color:var(--inside);outline:none;box-shadow:0 0 0 3px var(--inside-tint)}
-.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin-top:10px}
+/* keys are 52 px wide or more where there is room; in a narrow row they shrink so all seven still fit on one line */
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(52px,calc((100% - 36px) / 7)),1fr));gap:6px;margin-top:10px}
 .key{font-family:var(--serif);font-size:19px;min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;padding:0 4px}
 .key:hover{border-color:var(--ink)}
 .fb{font-family:var(--sans);font-size:17px;line-height:1.55;margin-top:10px}
@@ -604,6 +610,11 @@ code{font-family:var(--mono);font-size:.92em;background:var(--soft);border-radiu
 .rule .rule-eq{font-size:clamp(28px,6.4vw,44px)}
 @media (max-width:640px){.avt.small td,.avt.small th{padding:8px 6px;font-size:17px}}
 @media (max-width:640px){.srow.tr .minput{flex:1 1 140px}.srow.tr .ansrow{flex-wrap:wrap}.srow.tr .lhs{width:100%}}
+/* a unit after the answer box travels with Check (span.ans-end): at phone width the box gives up width so all three share one line,
+   and where they cannot, the unit and Check wrap together under a full-width box; a very long unit wraps inside its own space */
+.ans-end{display:inline-flex;align-items:center;gap:10px;flex:0 1 auto;min-width:0}
+.ans-end > .btn{flex:none}
+@media (max-width:640px){html .ansrow .minput:has(+ .ans-end){flex-basis:110px}}
 .ml.nb{padding:0 .08em}
 /* punctuation right after inline math rides inside the math's box, so it never starts a line (F03); same spacing as before */
 .ml.nb.mlp{padding-right:0}
@@ -818,6 +829,9 @@ p.tb-lab{display:block}
 .st-say{font-size:18px;line-height:1.45;padding-block:24px}
 .st-m{font-size:32px;line-height:1.3;padding-block:16px;min-width:0}
 .st-m .ml{white-space:normal}
+/* a long step: pieces broken before =, continuation lines indented (stepsMath in components.js) */
+.st-segs{display:block;padding-left:1em;text-indent:-1em}
+.st-seg{display:inline-block;max-width:100%;text-indent:0}
 .st-box{display:inline-grid;border:1.5px solid var(--ink);border-radius:8px;padding:.06em .35em .12em;margin-left:-.2em}
 .st-note{grid-column:3;margin:-10px 0 14px}
 .st-r.st-hasnote .st-no{grid-row:span 2}
@@ -1942,8 +1956,8 @@ function typed(id) {
   var ok = r && r.st === 'ok', unit = item.units || item.unit;
   var h = '<div class="ansrow"><span class="lhs">' + P('`' + item.ask + '`') + '</span>';
   h += '<input class="minput" id="in-' + id + '" data-id="' + id + '" value="' + esc(v) + '" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="' + esc(item.label || 'Your answer') + '" placeholder="Your answer">';
-  if (unit) h += '<span class="ptask">' + esc(unit) + '</span>';
-  h += '<button type="button" class="btn sm" data-act="check" data-id="' + id + '">Check</button></div>';
+  var chk = '<button type="button" class="btn sm" data-act="check" data-id="' + id + '">Check</button>';
+  h += (unit ? '<span class="ans-end"><span class="ptask">' + esc(unit) + '</span>' + chk + '</span>' : chk) + '</div>';
   if (!item.noPal) h += '<div class="pal" aria-label="Math keys">' + (item.num ? PAL : PAL.concat(PALX)).map(function (k) { return '<button type="button" class="key" data-act="key" data-id="' + id + '" data-k="' + esc(k[1]) + '">' + k[0] + '</button>'; }).join('') + '</div>';
   h += '<div class="pv" id="pv-' + id + '" aria-live="polite">' + (item.noPal ? '' : previewOf(v, item)) + '</div>';
   h += '<div id="fb-' + id + '">' + fbHTML(id) + '</div>';
@@ -2533,15 +2547,15 @@ function gvInner(id) {
   if (o.secant) {
     var sf = fnOf(o.secant.f), sa = o.secant.a, sb = o.secant.b, m = (sf(sb) - sf(sa)) / (sb - sa);
     var la = o.secant.extend === false ? sa : x0, lbb = o.secant.extend === false ? sb : x1;
-    curves += '<line x1="' + X(la) + '" y1="' + Y(sf(sa) + m * (la - sa)) + '" x2="' + X(lbb) + '" y2="' + Y(sf(sa) + m * (lbb - sa)) + '" style="stroke:' + roleColor(o.secant.role || 'muted') + ';stroke-width:' + (o.secant.width || 1.5) + (o.secant.dash === false ? '' : ';stroke-dasharray:' + (o.secant.dash || '6 5')) + '"/>';
+    curves += '<line x1="' + X(la) + '" y1="' + Y(sf(sa) + m * (la - sa)) + '" x2="' + X(lbb) + '" y2="' + Y(sf(sa) + m * (lbb - sa)) + '" style="stroke:' + roleColor(o.secant.role || 'muted') + ';stroke-width:' + (o.secant.width || 1.5) + (o.secant.dash === false ? '' : ';stroke-dasharray:' + (o.secant.dash === true || !o.secant.dash ? '6 5' : o.secant.dash)) + '"/>';
   }
   if (o.tangent) {
     var tf = fnOf(o.tangent.f), ta = o.tangent.at, hh = 1e-5, tm = o.tangent.slope !== undefined ? o.tangent.slope : (tf(ta + hh) - tf(ta - hh)) / (2 * hh);
     var half = o.tangent.half, ea = half ? ta - half : x0, eb = half ? ta + half : x1;
     curves += '<line x1="' + X(ea) + '" y1="' + Y(tf(ta) + tm * (ea - ta)) + '" x2="' + X(eb) + '" y2="' + Y(tf(ta) + tm * (eb - ta)) + '" style="stroke:' + roleColor(o.tangent.role || 'rate') + ';stroke-width:' + (o.tangent.width || 2.5) + (o.tangent.dash ? ';stroke-dasharray:' + (o.tangent.dash === true ? '7 5' : o.tangent.dash) : '') + '"/>';
   }
-  (o.vlines || []).forEach(function (vl) { curves += '<line x1="' + X(vl.x) + '" y1="' + T0 + '" x2="' + X(vl.x) + '" y2="' + B0 + '" style="stroke:' + roleColor(vl.role || 'muted') + ';stroke-width:' + (vl.width || 1.5) + (vl.dash === false ? '' : ';stroke-dasharray:' + (vl.dash || '5 5')) + '"/>'; });
-  (o.hlines || []).forEach(function (hl) { curves += '<line x1="' + L0 + '" y1="' + Y(hl.y) + '" x2="' + R0 + '" y2="' + Y(hl.y) + '" style="stroke:' + roleColor(hl.role || 'muted') + ';stroke-width:' + (hl.width || 1.5) + (hl.dash === false ? '' : ';stroke-dasharray:' + (hl.dash || '5 5')) + '"/>'; });
+  (o.vlines || []).forEach(function (vl) { curves += '<line x1="' + X(vl.x) + '" y1="' + T0 + '" x2="' + X(vl.x) + '" y2="' + B0 + '" style="stroke:' + roleColor(vl.role || 'muted') + ';stroke-width:' + (vl.width || 1.5) + (vl.dash === false ? '' : ';stroke-dasharray:' + (vl.dash === true || !vl.dash ? '5 5' : vl.dash)) + '"/>'; });
+  (o.hlines || []).forEach(function (hl) { curves += '<line x1="' + L0 + '" y1="' + Y(hl.y) + '" x2="' + R0 + '" y2="' + Y(hl.y) + '" style="stroke:' + roleColor(hl.role || 'muted') + ';stroke-width:' + (hl.width || 1.5) + (hl.dash === false ? '' : ';stroke-dasharray:' + (hl.dash === true || !hl.dash ? '5 5' : hl.dash)) + '"/>'; });
   g += o.clip === false ? '<g>' + curves + '</g>' : '<g clip-path="url(#' + cid + ')">' + curves + '</g>';
   (o.segs || []).forEach(function (s2) { if (s2.label) (marks.lbl = marks.lbl || []).push({ x: (X(s2.from[0]) + X(s2.to[0])) / 2, y: (Y(s2.from[1]) + Y(s2.to[1])) / 2, text: s2.label, role: s2.role, at: s2.at, gap: 8 }); g += '<line x1="' + X(s2.from[0]) + '" y1="' + Y(s2.from[1]) + '" x2="' + X(s2.to[0]) + '" y2="' + Y(s2.to[1]) + '" style="stroke:' + roleColor(s2.role) + ';stroke-width:' + (s2.width || 3) + (s2.dash ? ';stroke-dasharray:' + (s2.dash === true ? '7 5' : s2.dash) : '') + '"/>'; marks.push([[X(s2.from[0]), Y(s2.from[1])], [X(s2.to[0]), Y(s2.to[1])], [(X(s2.from[0]) + X(s2.to[0])) / 2, (Y(s2.from[1]) + Y(s2.to[1])) / 2]]); });
   /* dots: { x, y, open, role, r, label, at } */
@@ -2640,6 +2654,25 @@ function stepsNoteRow(o, note) {
   (o.rows || []).forEach(function (r, n) { if (name && new RegExp('@' + name + '(?![\\w-])').test(r.math)) want = n; });
   return want;
 }
+/* a long step breaks only before its = signs, as display math does: the math is cut before each top-level " = " (or " ≈ ") into
+   pieces, and each piece is an inline block that moves to the next line whole (indented) when it does not fit; only a piece wider
+   than the whole column wraps inside itself. A step with one piece renders exactly as before. */
+function stepsSegs(math) {
+  var segs = [], depth = 0, q = false, start = 0, s = String(math);
+  for (var i = 0; i < s.length; i++) {
+    var c = s[i];
+    if (c === '"') q = !q;
+    else if (!q && '({[«‹⟪'.indexOf(c) >= 0) depth++;
+    else if (!q && ')}]»›⟫'.indexOf(c) >= 0) depth--;
+    else if (!q && depth === 0 && (c === '=' || c === '≈') && s[i - 1] === ' ' && s[i + 1] === ' ' && s.slice(start, i).trim()) { segs.push(s.slice(start, i).trim()); start = i; }
+  }
+  segs.push(s.slice(start).trim());
+  return segs;
+}
+function stepsMath(math) {
+  var segs = stepsSegs(math);
+  return segs.length < 2 ? M(math) : '<span class="st-segs">' + segs.map(function (g) { return '<span class="st-seg">' + M(g) + '</span>'; }).join(' ') + '</span>';
+}
 function steps(id, o) {
   var rows = o.rows || [], notes = o.notes || [], h = '';
   if (o.title) h += '<p class="st-title">' + P(o.title) + '</p>';
@@ -2648,7 +2681,7 @@ function steps(id, o) {
     var under = notes.filter(function (x) { return x.fallback !== false && stepsNoteRow(o, x) === n; }).map(function (x) { return '<span class="st-note ink-note' + (x.role ? ' ink-' + x.role : '') + '">' + P(x.lead ? x.lead + ' ' + x.text : x.text) + '</span>'; }).join('');
     return '<div class="st-r' + (r.result ? ' st-res' : '') + (under ? ' st-hasnote' : '') + '" role="listitem"><span class="st-no" aria-hidden="true"><span>' + (n + 1) + '</span></span>' +
       '<span class="st-say"><span class="vh">Step ' + (n + 1) + ': </span>' + P(r.say || '') + '</span>' +
-      '<span class="st-m eq">' + (r.result ? '<span class="st-box">' + M(r.math) + '</span>' : M(r.math)) + '</span>' + under + '</div>';
+      '<span class="st-m eq">' + (r.result ? '<span class="st-box">' + stepsMath(r.math) + '</span>' : stepsMath(r.math)) + '</span>' + under + '</div>';
   }).join('') + '</div>';
   return annotate(id, h, notes, { cls: 'steps', inline: true });
 }
