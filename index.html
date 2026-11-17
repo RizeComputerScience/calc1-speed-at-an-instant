@@ -253,7 +253,8 @@ h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em;margin:
 .mv{font-style:italic;padding-right:.05em}
 .mo{white-space:nowrap}
 .mo.eq{white-space:normal}
-.ms{font-size:.7em;line-height:1;vertical-align:.65em}
+/* scripts: at least 13 px, so an exponent stays readable where a container shrinks the text around the math (2026-11-16) */
+.ms{font-size:max(.75em,13px);line-height:1;vertical-align:.6em}
 .ms.msv{font-style:italic}
 .em{font-style:italic}
 .in{color:var(--inside)}
@@ -525,12 +526,12 @@ body{font-size:19px}
    Engine-generic rules that used to live in Unit 2's page.css, copied verbatim and in their original order,
    so every page gets fractions, choices, cards, tables and the Memorize box without a page.css of its own. */
 /* stacked fractions: inline-block in ordinary flow, never flex or grid */
-.fr{display:inline-block;vertical-align:middle;text-align:center;line-height:1.08;margin:0 .1em;font-size:.86em}
+.fr{display:inline-block;vertical-align:middle;text-align:center;line-height:1.08;margin:0 .1em;font-size:.9em}
 .fr > .fn,.fr > .fd{display:block;padding:0 .14em;white-space:nowrap}
 .fr > .fn{border-bottom:1.5px solid currentColor;padding-bottom:.06em}
 .fr > .fd{padding-top:.06em}
 .fr.rate{color:var(--rate);background:var(--rate-tint);border-radius:5px;padding:.08em .06em;box-shadow:inset 0 -2px 0 var(--rate)}
-.fr.op{font-size:.8em}
+.fr.op{font-size:.84em}
 .fr .mv{padding-right:0}
 .dd{font-style:normal}
 .rt{color:var(--rate);font-weight:600}
@@ -624,27 +625,31 @@ code{font-family:var(--mono);font-size:.92em;background:var(--soft);border-radiu
 
 /* ---------- v2 notation (lesson-core.js mth) ---------- */
 .mn.me{font-style:normal}
-.msb{font-size:.7em;line-height:1;vertical-align:-.3em}
+.msb{font-size:max(.75em,13px);line-height:1;vertical-align:-.28em}
 .lim{display:inline-flex;flex-direction:column;align-items:center;vertical-align:baseline;line-height:1.15;margin-right:.2em}
-.lim-s{font-size:.6em;line-height:1;white-space:nowrap;margin-top:.02em}
+.lim-s{font-size:max(.72em,13px);line-height:1;white-space:nowrap;margin-top:.02em}
 .lim-s .ms{font-size:.85em;vertical-align:.5em}
 .int{white-space:nowrap;margin-right:.1em}
 .int-s{font-family:var(--math);font-size:1.7em;line-height:1;vertical-align:-.28em;font-style:normal}
-.int-l{display:inline-flex;flex-direction:column;justify-content:space-between;align-items:flex-start;vertical-align:middle;height:2.9em;font-size:.6em;line-height:1;margin-left:-.05em}
-.int-b{margin-top:-.35em}.int-a{margin-bottom:-.5em;margin-left:-.35em}
+.int-l{display:inline-flex;flex-direction:column;justify-content:space-between;align-items:flex-start;vertical-align:middle;height:2.5em;font-size:.7em;line-height:1;margin-left:-.04em}
+.int-b{margin-top:-.3em}.int-a{margin-bottom:-.43em;margin-left:-.3em}
 .sum{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;margin:0 .14em}
 .sum-s{font-family:var(--math);font-size:1.5em;line-height:1}
-.sum-a,.sum-b{font-size:.6em;white-space:nowrap;line-height:1.1}
-.evb{display:inline-flex;flex-direction:column;justify-content:space-between;align-items:flex-start;vertical-align:middle;height:3.1em;font-size:.6em;line-height:1;border-left:.13em solid currentColor;padding-left:.22em;margin-left:.12em}
+.sum-a,.sum-b{font-size:max(.7em,13px);white-space:nowrap;line-height:1.1}
+.evb{display:inline-flex;flex-direction:column;justify-content:space-between;align-items:flex-start;vertical-align:middle;height:2.66em;font-size:.7em;line-height:1;border-left:.11em solid currentColor;padding-left:.19em;margin-left:.1em}
 .abs > .mn:first-child{padding-right:.05em}.abs > .mn:last-child{padding-left:.05em}
 .dif .mv{padding-right:0}
 .fr .lim,.fr .int{font-size:1em}
 .mf.fs{padding-right:.2em}
+/* cube and fourth roots (mth): a readable index tucked over the radical's tick; the ∛ glyph stays in the page for screen readers */
+.rad{white-space:nowrap}
+.rad-i{display:inline-block;font-size:max(.58em,12px);line-height:1;vertical-align:.42em;margin:0 -.2em 0 .16em;position:relative;z-index:1}
+.rad-s{font-family:var(--math)}
 /* scripts under lim, beside ∫, around Σ and on the bar keep their small size even where a container fixes math spans in px */
 .lim-s *,.int-l *,.sum-a *,.sum-b *,.evb *,sub.msb *{font-size:inherit !important}
 /* v2 pages (mount without legacy): superscripts stay small inside choices, feedback, hints and card titles */
 .v2 sup.ms *{font-size:inherit !important}
-.v2 .ctitle .ms{font-size:.7em}
+.v2 .ctitle .ms{font-size:max(.75em,13px)}
 .rule-line{display:block}
 
 /* ---------- v2 components (components.js) ---------- */
@@ -1716,7 +1721,8 @@ function mth(s) {
     if (c === "'" || c === '′') { out += '<span class="mn">′</span>'; prev = 'opd'; i++; continue; }
     if (c === '″') { out += '<span class="mn">″</span>'; prev = 'opd'; i++; continue; }
     if (c === '√') { opd('<span class="mn">√</span>'); prev = 'op'; i++; continue; }
-    if (c === '∛' || c === '∜') { opd('<span class="mn">' + c + '</span>'); prev = 'op'; i++; continue; }
+    /* ∛ and ∜ are drawn as a radical with a real index (the glyph's built-in 3 is too small to read); the glyph stays for screen readers */
+    if (c === '∛' || c === '∜') { opd('<span class="mn rad"><span class="vh">' + c + '</span><span class="rad-i" aria-hidden="true">' + (c === '∛' ? '3' : '4') + '</span><span class="rad-s" aria-hidden="true">√</span></span>'); prev = 'op'; i++; continue; }
     if (c === '[') { if (sp && prev === 'opd') out += NN; sp = false; out += '<span class="mn">[</span>'; prev = 'op'; i++; continue; }
     if (c === ']') { out += '<span class="mn">]</span>'; prev = 'opd'; sp = false; i++; continue; }
     if (c === 'π') { opd('<span class="mn">π</span>'); i++; continue; }
@@ -1789,6 +1795,17 @@ function unitNote(item, unit) {
 function valOf(src) { var c = mk.compile(src); if (!c.f) return null; var a = c.f(0.7); return isFinite(a) ? a : null; }
 function near(v, k, mode) { if (v === null || k === null) return false; if (Math.abs(v - k) <= 1e-9 * Math.max(1, Math.abs(k))) return true; if (k === 0) return false; if (mode === 'dec') return Math.abs(v - k) <= Math.max(0.006 * Math.abs(k), 0.0051); if (mode === 'int') return Math.abs(v - k) <= 0.5; return false; }
 function irr(src) { return /pi|sqrt|π|√/.test(src); }
+/* rounding (2026-11-16, from the Calc I practice spot-check). A key written as an exact integer or fraction ("270", "-8", "4/3")
+   accepts a typed decimal only when it is the key, or the key correctly rounded to the places the student typed (at least
+   `places`, default 2): 271.5 is not 270, while 1.33 is 4/3 rounded. Keys with π, √, e or a decimal point keep the 0.6% band. */
+function exactKey(src) { return /^[\s()+\-−*\/\d]+$/.test(String(src)) && /\d/.test(String(src)); }
+function intKey(src) { if (!exactKey(src)) return false; var k = valOf(String(src)); return k !== null && Math.abs(k - Math.round(k)) < 1e-9; }
+function placesOf(v) { var m = /^\s*[-−]?\d*\.(\d+)\s*$/.exec(String(v)); return m ? m[1].length : 0; }
+function roundsTo(you, k, d) { if (you === null || k === null || !d) return false; var f = Math.pow(10, d), r = (k < 0 ? -1 : 1) * Math.round(Math.abs(k) * f + 1e-7) / f; return Math.abs(you - r) <= 1e-9 * Math.max(1, Math.abs(k)); }
+/* the places a tol row asks for, read from its tol (0.0005 is three places, 0.002 is two), or the item's own `places` */
+function tolPlaces(item) { return item.places || Math.max(2, Math.round(-Math.log(2 * item.tol) / Math.LN10)); }
+/* a function label typed before the answer ("R(p) =", "k'(x) =", "y' =", "V =") is not part of the answer; form guards read what follows it */
+function dropLabel(raw) { return String(raw).replace(/^\s*[A-Za-z][A-Za-z0-9]*\s*(?:['′″]+\s*)*(?:\(\s*[A-Za-z0-9.\-−+\s]*\))?\s*=\s*/, ''); }
 function alts(a) { return a === undefined || a === null ? [] : Array.isArray(a) ? a : [a]; }
 function keysOf(item) { return alts(item.ans).concat(alts(item.also)); }
 /* plain-text form for exact matches: "Does Not Exist." = "does not exist", "u^5/5 + C" = "u^5/5+c" */
@@ -1832,16 +1849,20 @@ function judgeNum(item, raw) {
     var yv = c.f(0.7), kv = valOf(item.ans);
     if (keys.some(function (kq) { return Math.abs(yv - kq) <= item.tol; })) return okr();
     for (var tw = 0; tw < W.length; tw++) { if (alts(W[tw][0]).some(function (wa) { var wv = valOf(wa); return wv !== null && Math.abs(yv - wv) <= item.tol; })) return slip(W[tw][1], W[tw][2]); }
+    /* after the listed wrong answers, so a page that lists a too-short rounding as wrong ("Give three decimal places") keeps it wrong */
+    var tp = placesOf(v);
+    if (tp >= tolPlaces(item) && keys.some(function (kq) { return roundsTo(yv, kq, tp); })) return okr();
     if (kv !== null && kv !== 0 && Math.abs(yv - kv) <= 0.02 * Math.abs(kv)) return { st: 'close' };
     return { st: 'no' };
   }
-  var dec = /\.\d/.test(v) && !/[π√]/.test(v), whole = /^\s*-?\d+\s*$/.test(v);
+  var dec = /\.\d/.test(v) && !/[π√]/.test(v), whole = /^\s*-?\d+\s*$/.test(v), dp = placesOf(v), minP = item.places || 2;
   var you = c.f(0.7), key = valOf(item.ans);
-  var mode = dec ? 'dec' : (whole && irr(item.ans) && Math.abs(key) >= 5 ? 'int' : '');
+  var mode = dec ? (exactKey(item.ans) ? '' : 'dec') : (whole && irr(item.ans) && Math.abs(key) >= 5 ? 'int' : '');
   if (keys.some(function (kq) { return near(you, kq, ''); })) return okr();
   if (near(you, key, mode)) return okr(true);
+  if (dp >= minP && keysOf(item).some(function (k) { return roundsTo(you, valOf(k), dp); })) return okr(true);
   for (var w = 0; w < W.length; w++) {
-    if (alts(W[w][0]).some(function (wa) { var wv = valOf(wa); return near(you, wv, dec ? 'dec' : (whole && irr(wa) && Math.abs(wv) >= 5 ? 'int' : '')); })) return slip(W[w][1], W[w][2]);
+    if (alts(W[w][0]).some(function (wa) { var wv = valOf(wa); return near(you, wv, dec ? (exactKey(wa) ? '' : 'dec') : (whole && irr(wa) && Math.abs(wv) >= 5 ? 'int' : '')) || (dp >= minP && roundsTo(you, wv, dp)); })) return slip(W[w][1], W[w][2]);
   }
   if ((dec || whole) && key !== null && key !== 0 && Math.abs(you - key) <= 0.1 * Math.abs(key)) return { st: 'close' };
   return { st: 'no' };
@@ -1975,6 +1996,7 @@ function hintsHTML(id) {
   return '<div class="hintd">' + item.hints.slice(0, nh).map(function (t, n) { return '<p><b>Hint' + (item.hints.length > 1 ? ' ' + (n + 1) : '') + '.</b> ' + P(t) + '</p>'; }).join('') + '</div>';
 }
 var CLOSE_MSG = 'Close. Check your arithmetic, and keep every decimal place the question uses.';
+var CLOSE_INT = 'Close. Check your arithmetic.';   /* for a whole-number key, where decimal places are beside the point */
 /* feedback is a mark, a word, then one line of help: the word sits in span.fb-w ("Correct.", "Not yet."), which a theme can
    style; a message that already opens with "Not yet." or "Not a match." keeps its own word */
 function fbWord(html, word) {
@@ -1988,7 +2010,7 @@ function fbHTML(id) {
   if (r.st === 'ok') return '<p class="fb fb-ok">' + fbWord((r.approx ? 'Exactly, it is ' + M(String(item.ans).replace(/^-/, '−')) + '.' : '') + (item.okNote ? (r.approx ? ' ' : '') + P(item.okNote) : '') + (r.unitNote ? ' ' + esc(r.unitNote) : ''), 'Correct.') + '</p>';
   if (r.st === 'err') return '<p class="fb fb-err">' + (r.md ? P(r.msg) : esc(r.msg)) + '</p>';
   if (r.st === 'stuck') return '<p class="fb fb-stuck">' + (item.hints && item.hints.length ? 'Here is a place to start.' : 'Try the first step, then check again.') + '</p>';
-  if (r.st === 'close') return '<p class="fb fb-stuck">' + P(item.closeMsg || CLOSE_MSG) + '</p>';
+  if (r.st === 'close') return '<p class="fb fb-stuck">' + P(item.closeMsg || (intKey(item.ans) ? CLOSE_INT : CLOSE_MSG)) + '</p>';
   if (r.st === 'slip') return '<p class="fb fb-no">' + fbWord(P(r.msg), 'Not yet.') + goHTML(r.go || item.teach, id) + '</p>';
   return '<p class="fb fb-no">' + fbWord((r.msg ? esc(r.msg) : '') + (item.hints && item.hints.length ? (r.msg ? ' ' : '') + 'The hint below shows the next step.' : ''), 'Not yet.') + ((S.tries[id] || 0) >= 2 ? goHTML(item.teach, id) : '') + '</p>';
 }
